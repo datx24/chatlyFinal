@@ -1,0 +1,36 @@
+.notification {
+    position: fixed;
+    bottom: 25px;
+    right: 20px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Arrange messages vertically */
+    align-items: flex-end; /* Align messages to the right */
+    max-width: 300px; /* Limit the width of the notification */
+}
+
+.notification p {
+    margin: 5px 0; /* Add some vertical spacing between messages */
+    font-weight: bold;
+}
+
+.notification span {
+    font-size: 12px;
+    color: #999999;
+}
+
+.notification button {
+    background-color: transparent;
+    border: none;
+    color: #666666;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.notification button:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,276 @@
+.login{
+  width: 100%;
+  height: 100%;
+  background-image: url(https://scontent.xx.fbcdn.net/v/t1.15752-9/440935339_984140963205821_8333561852769218862_n.png?stp=dst-png_p206x206&_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_ohc=sRlUVq4zoroQ7kNvgFq-pNh&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QFrosmgSe8Z22Mz4VvUSxrBgJys-sDzH_8EgTF4QPHl3g&oe=66737A97);
+  background-size: 100%;
+  font-family: 'Roboto',sans-serif;
+}
+
+.header-login{
+    background: #a8dde47c;
+    height: 15%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 30px;
+  }
+  
+.header-child-right{
+  display: flex;
+}
+
+.header-child-right li{
+  list-style-type: none;
+  font-family: 'Roboto',sans-serif;
+  font-size: 20px;  
+  color: #324B50;
+  font-weight: 500;
+  margin-left: 30px;
+}
+
+
+.main-login{
+  height: 85%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  padding: 10px 40px;
+}
+
+.main-left-child{
+  padding: 30px 0;
+  width: 40%;
+}
+
+.main-left-child span{
+  font-family: 'Manuale',sans-serif;
+  font-size: 50px;
+  font-weight: 800;
+  line-height: 71.85px;
+  text-align: left;
+  color: #324B50;
+}
+
+
+.main-left-child-2{
+  margin-top: 70px;
+  flex-direction: column;
+}
+
+.btn-gg,
+.btn-ff {
+  width: 90%;
+  display: flex;
+  align-items: center; /* Căn chỉnh nội dung theo trục dọc */
+  justify-content: center; /* Căn chỉnh nội dung theo trục ngang */
+  height: 54px;
+  background: #324B50;
+  border: none; /* Xóa viền của button */
+  border-radius: 8px; /* Bo tròn góc của button */
+  cursor: pointer; /* Hiển thị con trỏ khi rê chuột vào */
+  margin-bottom: 10px; /* Tăng khoảng cách giữa các button */
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.btn-gg img {
+  margin-left: -33%;
+  margin-right: 20%;
+}
+
+.btn-ff img{
+  margin-left: -32%;
+  margin-right: 17%;
+}
+
+.btn-gg:hover,
+.btn-ff:hover {
+  background: #2b4044; /* Màu nền khi hover */
+}
+
+.main-right-child{
+  width: 60%;
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper{
+  position: relative;
+  background-color: white;
+  border: 1px solid black;
+  /* background-color: white; */
+  width: 480px;
+  height: 520px;
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.wrapper .pass-form{
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+}
+
+.wrapper .pass-form.login-form{
+  transition: transform .18s ease;
+}
+
+.wrapper .pass-form.register-form{
+  position: absolute;
+  transition: none;
+  transform: translateX(500px);
+}
+
+.wrapper.active .pass-form.login-form{
+  transition: none;
+  transform: translateX(-500px);
+}
+
+.wrapper.active .pass-form.register-form{
+  transition: transform .18s ease;
+  transform: translateX(0);
+}
+
+
+.pass-form h2{
+  font-size: 30px;
+  color: #324B50;
+  text-align: center;
+  margin: 0;
+}
+
+.input-box{
+  position: relative;
+  width: 100%;
+  height: 40px;
+  border-bottom: 2px solid #324B50;
+  margin: 30px 0;
+}
+
+.input-box label{
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  color: #324B50;
+  opacity: 0.5;
+  font-size: 20px;
+  font-weight: 400;
+  pointer-events: none;
+  transition: .3s;
+}
+
+.input-box input:focus~label,
+.input-box input:valid~label{
+  top: -5px;
+  font-size: 15px;
+}
+
+.input-box input{
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  color: #324B50;
+  font-weight: 300;
+  padding: 0 35px 0 5px;
+}
+
+.input-box i{
+  position: absolute;
+  right: 8px;
+  font-size: 20px;
+  color: #324B50;
+  line-height: 45px;
+}
+
+.remember-forgot{
+  font-size: 15px;
+  color: #324B50;
+  font-weight: 500;
+  margin: -15px 0 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.remember-forgot label input{
+  accent-color: #324B50;
+  margin-right: 5px;
+}
+
+.remember-forgot a{
+  color: #324B50;
+  text-decoration: none;
+}
+.remember-forgot a:hover{
+  text-decoration: underline;
+}
+
+.log-btn{
+  width: 90%;
+  height: 50px;
+  background-color: #324B50;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.login-register{
+  font-size: 15px;
+  color: #324B50;
+  text-align: center;
+  font-weight: 400;
+  margin: 10px 0 15px;
+}
+
+.login-register p a{
+  color: #324B50;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-register p a:hover{
+  text-decoration: underline;
+}
+
+.success-color{
+  color: #00da1d;
+}
+
+.error-color{
+  color: #f81818;
+}
+
+.text-message{
+  font-size: 15px;
+  cursor: default;
+}
+
+.error-infor{
+  position: absolute;
+  z-index: 1000;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid black;
+  background-color: white;
+  align-items: center;
+  text-align: center;
+  padding: 10px 5px;
+}
+
+.error-infor button{
+  width: 100px;
+  background-color: #324B50;
+  color: white;
+}

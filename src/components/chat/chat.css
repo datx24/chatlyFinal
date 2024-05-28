@@ -1,0 +1,325 @@
+.chat {
+    flex: 5;
+    height: 100%;
+}
+
+.body-child-right-1 {
+    flex: 1;
+    height: 114px;
+    display: flex;
+    flex-direction: row;
+}
+
+.body-child-right-2 {
+    height: 500px;
+    flex: 6;
+    padding: 20px;
+    border-top: 1px solid rgba(50, 75, 80, 0.61);
+    border-bottom: 1px solid rgba(50, 75, 80, 0.61);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    gap: none;
+}
+
+.body-child-right-3 {
+    display: flex;
+    height: 40px;
+    position: relative;
+    background-color: rgba(226, 234, 235, 0.21);
+    border-bottom: 1px solid rgba(50, 75, 80, 0.61);
+}
+
+.body-child-right-4 {
+    display: flex;
+    position: relative;
+    height: 40px;
+}
+
+.body-child-right-1-left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.body-child-right-1-left img {
+    height: 75px;
+    width: 75px;
+    border-radius: 50%;
+    border: 2px solid rgba(35, 140, 159, 1);
+}
+
+.body-child-right-1-nearleft {
+    flex: 2;
+}
+
+.body-child-right-1-nearleft span {
+    display: inline-block;
+    font-family: 'Roboto', sans-serif;
+    font-size: 25px;
+    font-weight: 500;
+    text-align: left;
+    color: rgba(50, 75, 80, 1);
+    margin-top: 10%;
+}
+
+.body-child-right-1-nearleft p {
+    display: flex;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: rgba(50, 75, 80, 1);
+    margin-top: 2%;
+}
+
+.body-child-right-1-nearright .input-wrapper {
+    background-color: white;
+    margin-top: 7.5%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    border-radius: 50px;
+    border: 1px solid rgba(50, 75, 80, 1);
+    height: 36%;
+}
+
+.body-child-right-1-nearright .input-wrapper input {
+    width: 434px;
+    margin-left: 3%;
+    height: 40px;
+    border: none;
+    outline: none;
+    padding-left: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.body-child-right-1-nearright .input-wrapper img {
+    margin-left: auto;
+    height: 46px;
+    padding-right: 10px;
+}
+
+.body-child-right-1-right {
+    flex: 2;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.body-child-right-3 img {
+    position: relative;
+    left: 26px;
+    margin-top: 8px;
+    width: 24px;
+    height: 24px;
+}
+
+.body-child-right-4 .input-wrapper {
+    margin-left: 3%;
+    margin-top: 1%;
+    display: flex;
+    justify-content: left;
+    height: 50%;
+    width: 90%;
+    top: 3px;
+    border: none;
+}
+
+.body-child-right-4 .input-wrapper input {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(50, 75, 80, 0.5);
+    font-family: 'Roboto', sans-serif;
+    width: 100%;
+    border: none;
+    outline: none;
+}
+
+.body-child-right-4 .input-wrapper img {
+    height: 44px;
+    width: 44px;
+    margin-left: auto;
+}
+
+.emoji {
+    position: relative;
+}
+
+.emoji .picker {
+    left: -300px;
+    position: absolute;
+    display: inline-flex;
+    top: -500px;
+}
+
+.input-wrapper .selected-images {
+    position: absolute;
+    display: inline-flex;
+    width: max-content;
+    height: 70px;
+    top: -118px;
+    left: -32px;
+    border: 1px solid black;
+    flex-direction: row;
+}
+
+.input-wrapper .selected-images img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 20%;
+    margin-right: 5px;
+}
+
+.body-child-right-2::-webkit-scrollbar {
+    width: 10px;
+}
+
+.body-child-right-2::-webkit-scrollbar-track {
+    background-color: none;
+}
+
+.body-child-right-2::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 100, 100, 0.61);
+    border-radius: 5px;
+}
+
+.body-child-right {
+    height: 700px;
+    position: relative;
+}
+
+.message-search-container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    height: 40px;
+    border: 1px solid black;
+    box-shadow: 0px 4px 2px 0px rgba(0, 0, 0, 0.08);
+}
+
+.message-search {
+    width: 480px;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.message-search .left {
+    flex: 4;
+}
+
+.message-search .right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-search span {
+    font-size: 16px;
+    color: #333;
+    margin-right: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.highlight {
+    background-color: yellow;
+    transition: background-color 0.5s ease;
+}
+
+.message-text-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: max-content;
+}
+
+.share-icon {
+    display: none;
+    position: absolute;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.share-icon.left {
+    left: -25px;
+}
+
+.share-icon.right {
+    right: -25px;
+}
+
+.message-text-wrapper:hover .share-icon {
+    display: inline-block;
+}
+
+.Message {
+    max-width: 50%;
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.Message.own {
+    align-self: flex-end;
+    position: relative;
+}
+
+.Message.own .texts p {
+    background-color: rgba(226, 234, 235, 1);
+    margin-left: 38px;
+}
+
+.Message img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.texts {
+    margin-left: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.texts img {
+    width: 100%;
+    height: 300px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.texts p {
+    width: max-content;
+    font-family: 'Roboto', sans-serif;
+    padding: 10px 15px;
+    background-color: aqua;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 400;
+    color: black;
+    position: relative;
+}
+
+.texts span {
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    color: rgba(148, 161, 164, 1);
+    margin-top: 5px;
+}
+
+.selected-file-name{
+    top:-111px;
+    position: relative;
+    font-size: 16px;
+    color: #333; /* Màu sắc của văn bản */
+    margin-top: 5px; /* Khoảng cách giữa phần tử này và các phần tử khác */
+  /* Thêm bất kỳ kiểu dáng tùy chỉnh nào khác bạn muốn áp dụng */
+}

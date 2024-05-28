@@ -1,0 +1,123 @@
+.userInfo {
+    background-color: rgba(226, 234, 235, 1);
+    height: auto; /* Thay đổi chiều cao thành auto để phù hợp với hai trạng thái hiển thị */
+  }
+  
+  .user-information-1 {
+    display: flex;
+    height: 80px;
+    margin-bottom: -3px;
+    position: relative;
+    top: -6px;
+  }
+  
+  .user-information {
+    display: inline-block;
+    width: 85%;
+    margin-left: 7%;
+    margin-right: -22%;
+    margin-top: 4%;
+    flex-direction: column;
+  }
+  
+  .user-image {
+    position: relative;
+    border-radius: 100%;
+    width: 85px;
+    height: 80px;
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .user-image img {
+    border: 3px solid rgba(35, 140, 159, 1);
+    width: 75px;
+    height: 75px;
+    position: absolute;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .user-status {
+    border: 1px solid white;
+    background: rgba(1, 255, 72, 1);
+    border-radius: 50%;
+    width: 20%;
+    height: 20%;
+    position: relative;
+    top: -10%;
+    left: -12.5%;
+    transform: translate(356%, 245%);
+  }
+  
+  .user-name {
+    margin-left: 10px;
+    display: flex;
+    align-items: left;
+    justify-content: center;
+    flex-direction: column;
+  }
+  
+  .user-name span {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 25px;
+    color: rgba(35, 140, 159, 1);
+  }
+  
+  .user-icon {
+    display: inline-block;
+    position: absolute;
+    top: 56%;
+    width: 50px;
+  }
+  
+  .icon-bell {
+    display: inline-block;
+    margin-right: 7%;
+  }
+  
+  .icon-bell span {
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 35.16px;
+    color: rgba(35, 140, 159, 1);
+  }
+  
+  .input-wrapper {
+    position: relative;
+    background-color: white;
+    margin-top: 1.8%;
+    display: flex;
+    justify-content: left;
+    border-radius: 20px;
+    align-items: center;
+    border: 1px solid rgba(50, 75, 80, 1);
+  }
+  
+  .input-wrapper input {
+    background-color: transparent;
+    border: none;
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(50, 75, 80, 0.5);
+    font-family: 'Roboto', sans-serif;
+    width: 314px;
+  }
+  
+  .input-wrapper img {
+    padding: 10px;
+  }
+  
+  .input-wrapper input:focus {
+    outline: none;
+  }
+  
+  .custom-file-upload {
+    position: absolute;
+    display: contents;
+  }
+  
