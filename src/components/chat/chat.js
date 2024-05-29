@@ -61,6 +61,7 @@ const Chat = () => {
   const mediaRecorder = useRef(null); // Ref để lưu trữ MediaRecorder instance
   const chunks = useRef([]); // Ref để lưu trữ các phần dữ liệu ghi âm
   const [audioUrl, setAudioUrl] = useState(null);
+  
 
   const handleBlockClick = () => {
     toggleChatVisibility();
@@ -125,74 +126,94 @@ const Chat = () => {
   
   const handleSend = async () => {
     try {
-      
+      // Tạo một bản sao của mảng tin nhắn hiện tại
       const updatedMessages = [...messages];
   
-      // Kiểm tra và thêm tin nhắn trả lời nếu có
-      if (replyMessageIndex !== -1 && replyText.trim() !== '') {
-        const replyTo = replyContent && replyContent.id ? replyContent.id : null;
+      // Kiểm tra và thêm tin nhắn reply nếu có
+      if (replyMessageIndex !== -1 && replyContent) {
         updatedMessages.push({
           senderId: currentUser.id,
           text: replyText.trim(),
           createdAt: Timestamp.now(),
-          replyTo: replyTo,
+          replyTo: replyContent, // Thêm thông tin về tin nhắn đã reply
         });
       }
   
-      // Kiểm tra và thêm tin nhắn văn bản nếu có
-      if (text.trim() !== '') {
-        updatedMessages.push({
-          senderId: currentUser.id,
-          text: text.trim(),
-          createdAt: Timestamp.now(),
-        });
-      }
-  
-      // Kiểm tra và thêm tin nhắn audio nếu có
-      if (audioUrl) {
-        updatedMessages.push({
-          senderId: currentUser.id,
-          audio: audioUrl,
-          createdAt: Timestamp.now(),
-        });
-      }
-  
-      // Kiểm tra và thêm tin nhắn hình ảnh nếu có
-      if (images.length > 0) {
-        for (const image of images) {
-          if (image && image.url) {
-            updatedMessages.push({
-              senderId: currentUser.id,
-              img: image.url,
-              createdAt: Timestamp.now(),
-            });
-          }
+       // Kiểm tra và thêm tin nhắn văn bản nếu có
+    if (text.trim() !== '') {
+      updatedMessages.push({
+        senderId: currentUser.id,
+        text: text.trim(),
+        createdAt: Timestamp.now(),
+      });
+    }
+
+    // Kiểm tra và thêm tin nhắn âm thanh nếu có
+    if (audioUrl) {
+      updatedMessages.push({
+        senderId: currentUser.id,
+        audio: audioUrl,
+        createdAt: Timestamp.now(),
+      });
+    }
+
+    // Kiểm tra và thêm tin nhắn hình ảnh nếu có
+    if (images.length > 0) {
+      for (const image of images) {
+        if (image && image.url) {
+          updatedMessages.push({
+            senderId: currentUser.id,
+            img: image.url,
+            createdAt: Timestamp.now(),
+          });
         }
       }
-  
-      // Cập nhật mảng tin nhắn của cả hai bên
+    }
+
+    // Kiểm tra và thêm tin nhắn tệp nếu có
+    if (selectedFile) {
+      // Tải file được chọn lên Firebase Storage
+      const storageRef = ref(storage, `files/${selectedFile.name}`);
+      await uploadBytes(storageRef, selectedFile);
+      const fileUrl = await getDownloadURL(storageRef);
+
+      // Thêm thông tin về file vào mảng tin nhắn
+      updatedMessages.push({
+        senderId: currentUser.id,
+        file: {
+          fileName: selectedFile.name, // Lưu trữ tên file
+          url: fileUrl, // Lưu trữ URL của file đã tải lên
+        },
+        createdAt: Timestamp.now(),
+      });
+    }
+
+    // Kiểm tra xem có tin nhắn hợp lệ để gửi không
+    if (updatedMessages.length > messages.length) {
+      // Cập nhật tài liệu Firestore với mảng tin nhắn đã cập nhật
       await updateDoc(doc(db, "chats", chatId), {
         messages: updatedMessages,
       });
-  
-      // Cập nhật mảng tin nhắn của người nhận
-      const receiverId = 'receiver-id'; // Thay thế bằng ID của người nhận
-      await updateDoc(doc(db, "chats", `${receiverId}-${currentUser.id}`), {
-        messages: updatedMessages,
-      });
-  
-      // Xóa các trường nhập liệu sau khi gửi
+
+      // Đặt lại các trường nhập sau khi gửi tin nhắn
+      // Đặt lại các trường nhập sau khi gửi tin nhắn
       setText("");
-      setReplyText(""); // Đặt lại replyText sau khi gửi
-      setReplyMessageIndex(-1); // Đặt lại replyMessageIndex sau khi gửi
+      setReplyText("");
+      setReplyMessageIndex(-1);
       setImages([]);
       setSelectedFile(null);
-      setReplyContent(null);
+      setReplyContent("");
       setAudioUrl(null);
-    } catch (error) {
-      console.error("Error sending message:", error);
+    } else {
+      console.error("Không có tin nhắn hợp lệ để gửi");
     }
-  };
+  } catch (error) {
+    console.error("Lỗi khi gửi tin nhắn:", error);
+  }
+};
+  
+
+  
 
   const generateUniqueId = () => {
     return '_' + Math.random().toString(36).substr(2, 9);
@@ -371,6 +392,101 @@ const openFilePicker = () => {
   input.click(); // Kích hoạt sự kiện click trên phần tử input
 };
 console.log('this is ', isUser);
+
+// Hàm để ghi âm giọng nói và lưu lên Firestore
+const handleVoiceRecord = async () => {
+  try {
+    if (!recording) {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder.current = new MediaRecorder(stream);
+
+      mediaRecorder.current.ondataavailable = (e) => {
+        chunks.current.push(e.data);
+      };
+
+      mediaRecorder.current.onstop = async () => {
+        const audioBlob = new Blob(chunks.current, { type: 'audio/wav' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        // Upload file âm thanh lên Firestore Storage
+        const storageRef = ref(storage, `audio/${generateUniqueId()}.wav`);
+        await uploadBytes(storageRef, audioBlob);
+
+        // Lấy URL của file âm thanh từ Firestore Storage
+        const downloadURL = await getDownloadURL(storageRef);
+
+        // Lưu URL vào state của component
+        setAudioUrl(downloadURL);
+
+        // Cập nhật URL vào tin nhắn mới
+        const newMessage = {
+          senderId: currentUser.id,
+          audio: downloadURL, // Sử dụng URL mới đã lấy được
+          createdAt: Timestamp.now(),
+          replyTo: replyContent ? replyContent.id : null,
+        };
+
+        // Thêm tin nhắn mới vào Firestore
+        await updateDoc(doc(db, "chats", chatId), {
+          messages: arrayUnion(newMessage),
+        });
+
+        // Reset state sau khi gửi
+        setAudioUrl(null);
+        chunks.current = [];
+        setRecording(false);
+      };
+
+      mediaRecorder.current.start();
+      setRecording(true);
+
+      setTimeout(() => {
+        if (mediaRecorder.current && mediaRecorder.current.state === 'recording') {
+          mediaRecorder.current.stop();
+        }
+      }, 3000);
+    }
+  } catch (error) {
+    console.error('Error recording voice:', error);
+  }
+};
+
+const handleShareClick = (content, index) => {
+  // Kiểm tra nếu tin nhắn được chia sẻ là một tin nhắn reply, chọn tin nhắn gốc để chia sẻ
+  const messageToShare = content.replyTo ? { ...content, replyTo: content.replyTo } : content;
+  setReplyContent(messageToShare); // Set nội dung tin nhắn reply hoặc tin nhắn gốc
+  setReplyText(""); // Đặt giá trị của input về rỗng
+  setReplyMessageIndex(index); // Lưu index của tin nhắn được reply hoặc tin nhắn gốc
+
+  // Cuộn đến vị trí của tin nhắn được reply hoặc tin nhắn gốc
+  scrollToReplyMessage(index);
+};
+
+
+// Hàm scrollToReplyMessage để cuộn đến vị trí của tin nhắn được reply
+const scrollToReplyMessage = (index) => {
+  const messageRef = messageRefs.current[index];
+  if (messageRef) {
+    messageRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+};
+
+const shortenFileName = (fileName, maxLength = 20) => {
+  // Add a null/undefined check for fileName
+  if (!fileName || fileName.length <= maxLength) return fileName;
+  const extensionIndex = fileName.lastIndexOf('.');
+  const extension = fileName.slice(extensionIndex);
+  const shortName = fileName.slice(0, maxLength - extension.length - 3);
+  return `${shortName}...${extension}`;
+};
+
+const cancelReply = () => {
+  setReplyContent(null);
+  setReplyText(""); // Đặt giá trị của input về rỗng khi hủy bỏ reply
+};
+
+
+
   return (
     <div className='chat'>
       <div className='body-child-right'>
@@ -423,13 +539,10 @@ console.log('this is ', isUser);
               <img src={Phone} />
             </div>
             <div className='body-child-right-1-right-1'>
-            {isUser ? 
+            
               <img src={Setting}
                 onClick={handleShowGroupInfo} /> 
-              : 
-              <img src={Setting}
-                onClick={()=>{}}/>  
-            }
+              
             {/* ------------------------------------- */}
 
             {isGroupInfoVisible && <GroupInfo onClose={handleGroupInfoToggle}/>}
@@ -454,44 +567,96 @@ console.log('this is ', isUser);
 
 {chat?.messages?.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis()).map((message, index) => (
   <div className={message.senderId === currentUser.id ? 'Message own' : 'Message'} key={index} ref={(el) => (messageRefs.current[index] = el)}>
-    {message.senderId !== currentUser.id && <img src={user.photoURL} alt="Avatar" />}
+    {!message.replyTo && message.senderId !== currentUser.id && <img src={user.photoURL} alt="Avatar" />} {/* Avatar chỉ hiển thị cho tin nhắn gốc và tin nhắn người gửi */}
     <div className='texts'>
-      {message.text && !message.img && !message.file && (
-        <div className="message-text-wrapper">
-          {message.senderId === currentUser.id && <i className='bx bxs-share share-icon left'></i>}
-          <p>{message.text}</p>
-          {message.senderId !== currentUser.id && <i className='bx bxs-share bx-flip-horizontal share-icon right'></i>}
-        </div>
-      )}
-      {message.img && !message.text && !message.file && <img src={message.img} alt={`image-${index}`} />}
-      {message.file && !message.text && !message.img && (
-        <div>
-          <p><a href={message.file} download={message.fileName}>{message.fileName}</a></p>
-        </div>
-      )}
-      {message.text && message.img && (
-        <div>
-          {index === 0 || (index > 0 && chat.messages[index - 1].senderId !== currentUser.id && !chat.messages[index - 1].img) && <p>{message.text}</p>}
-          <img src={message.img} alt={`image-${index}`} />
-        </div>
-      )}
-      {message.createdAt && message.createdAt instanceof Timestamp ? (
-        <span>{moment(message.createdAt.toDate()).format('HH:mm, DD/MM/YYYY')}</span>
-      ) : (
-        <span>No timestamp available</span>
+      <div className={message.replyTo ? 'replied-message-wrapper' : ''}>
+        {message.replyTo && (
+          <div className='replied-message' onClick={() => handleShareClick(message.replyTo, index)}>
+            {message.replyTo.text && <div className='file-wrapper'><p>{message.replyTo.text}</p></div>}
+            {message.replyTo.img && <img src={message.replyTo.img} alt='replied-img' />}
+            {message.replyTo.file && (
+              <div className='file-wrapper'>
+                <p>{message.replyTo.file.fileName}</p>
+                <a href={message.replyTo.file.url} download={message.replyTo.file.fileName}>Download</a>
+              </div>
+            )}
+          </div>
+        )}
+        {message.text && !message.img && !message.file && !message.audio && (
+          <div className="message-text-wrapper">
+            {message.senderId === currentUser.id && <i className='bx bxs-share share-icon left' onClick={() => handleShareClick(message,index)}></i>}
+            <p>{message.text}</p>
+            {message.senderId !== currentUser.id && <i className='bx bxs-share bx-flip-horizontal share-icon right' onClick={() => handleShareClick(message,index)}></i>}
+          </div>
+        )}
+        {message.img && !message.text && !message.file && !message.audio && (
+          <div className="message-img-wrapper">
+            {message.senderId === currentUser.id && <i className='bx bxs-share share-icon-left' onClick={() => handleShareClick(message,index)}></i>}
+            <img src={message.img} alt={`image-${index}`} />
+            {message.senderId !== currentUser.id && <i className='bx bxs-share bx-flip-horizontal share-icon-right' onClick={() => handleShareClick(message,index)}></i>}
+          </div>
+        )}
+        {message.file && !message.text && !message.img && !message.audio && (
+          <div className="message-file-wrapper">
+            {message.senderId === currentUser.id && <i className='bx bxs-share share-icon-left' onClick={() => handleShareClick(message,index)}></i>}
+            <p><a href={message.file.url} download={message.file.fileName}>{shortenFileName(message.file.fileName)}</a></p>
+            {message.senderId !== currentUser.id && <i className='bx bxs-share bx-flip-horizontal share-icon-right' onClick={() => handleShareClick(message,index)}></i>}
+          </div>
+        )}
+        {message.audio && !message.text && !message.img && !message.file && (
+          <div className="message-audio-wrapper">
+            {message.senderId === currentUser.id && <i className='bx bxs-share share-icon-left' onClick={() => handleShareClick(message,index)}></i>}
+            <p>
+              <audio controls>
+                <source src={message.audio} type="audio/wav" />
+              </audio>
+            </p>
+            {message.senderId !== currentUser.id && <i className='bx bxs-share bx-flip-horizontal share-icon-right' onClick={() => handleShareClick(message,index)}></i>}
+          </div>
+        )}
+      </div>
+      {message.createdAt && message.createdAt instanceof Timestamp && !message.replyTo && (
+        <span>{moment(message.createdAt.toDate()).format('HH:mm, DD/MM/YYYY')}</span> // Hiển thị thời gian chỉ cho tin nhắn gốc
       )}
     </div>
   </div>
 ))}
 
+
+
+
+  {images.length > 0 && (
+    <div className="selected-images">
+      {images.map((image, index) => (
+        <img key={index} src={URL.createObjectURL(image.file)} alt={`selected-image-${index}`} />
+      ))}
+    </div>
+  )}
+
         </div>
+        {replyContent && (
+  <div className='reply-wrapper'>
+    {/* Hiển thị nội dung của tin nhắn được reply */}
+    {replyContent.text && <p>{replyContent.text}</p>}
+    {replyContent.img && <img src={replyContent.img} alt='reply-img' />}
+    {replyContent.file && (
+      <div className='file-wrapper'>
+        <p>{shortenFileName(replyContent.fileName)}</p>
+        <a href={replyContent.file} download={replyContent.fileName}>Download</a>
+      </div>
+    )}
+    {/* Thêm sự kiện onClick để hủy bỏ reply */}
+    <button className='cancel-reply' onClick={cancelReply}>Cancel</button>
+  </div>
+)}
+
         {isBlocked ? (
   <div className="block-message">Bạn đã chặn người dùng này, không thể nhắn tin!</div>
 ) : (
   <div className="body-child-right-3">
     <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
     <img src={File} onClick={openFilePicker}/>
-    <img src={Voice} />
+    <img src={Voice} onClick={handleVoiceRecord}/>
     {/* // Thêm sự kiện click vào label để kích hoạt input file */}
     <label className='button_upImg' htmlFor='file' onClick={(e) => e.stopPropagation()}>
       <img src={Picture}/>
@@ -502,15 +667,13 @@ console.log('this is ', isUser);
 <div className="body-child-right-4">
   <div className='input-wrapper'>
     <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
-    {/* Hiển thị hình ảnh đã chọn trước khi gửi */}
-    {images.length > 0 && (
-      <div className="selected-images">
-        {images.map((image, index) => (
-          <img key={index} src={URL.createObjectURL(image.file)} alt={`selected-image-${index}`} />
-        ))}
-      </div>
-    )}
-    <input onKeyPress={handleKeyPress} placeholder='Aa' onChange={(e) => setText(e.target.value)} value={text} />
+    <input
+            type='text'
+            placeholder='Aa'
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
     <div className='emoji'>
       <img src={Emoji}
         onClick={() => setOpen((prev) =>!prev)}
