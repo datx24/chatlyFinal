@@ -6,16 +6,18 @@ import createGroup from '../lib/groups';
 import DisplayImage,{imageFile} from './DisplayImage';
 import InputText, { nameGroup } from './InputText';
 import { useUserStore } from '../lib/userStore';
+import Logo from '../../images/Group 4.png'
 const AddGroupStyled = styled.div`
-    width: 371px;
-    height: 574px;
+    width: 471px;
+    height: 582px;
     border: 1px solid black;
     border-radius: 20px;
-    position: relative;
+    position: fixed;
+    z-index: 1000;
     background-color: #fff;
-    z-index: 5;
-    top: 51%;
-    left: -217%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     .group-info h3{
         text-align: center;
         font-family: "Roboto", sans-serif;
@@ -87,12 +89,12 @@ const AddGroupStyled = styled.div`
     .create-group{
         background-color: #324B50;
         padding: 6px 75px;
+        margin: 10px 0;
         border-radius: 10px;
         font-family: "Roboto", sans-serif;
         font-sỉze: 20px;
         font-weight: 700;
         color: white;
-        margin: 0;
         cursor: pointer;
     }
     .users-list ul{
@@ -101,17 +103,29 @@ const AddGroupStyled = styled.div`
         overflow-y: auto;
         margin-top: 10px;
     }
+    
+`
+const HeaderTab = styled.div`
+    display: flex;
+    height: 41px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 16px;
+    background-color: #324B50;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    position: relative;
+    .logo{
+        height: 100%;
+    }
     .closeTab{
         border: none;
+        outline: none;
         background: none;
         font-family: "Rubik", sans-serif;
         font-weight: 900;
         color: white;
         font-size: 20px;
-        position: absolute;
-        right: 10px;
-        top: 5px;
-        
     }
     .closeTab:hover{
         border: none;

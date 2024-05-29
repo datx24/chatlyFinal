@@ -62,16 +62,16 @@ const ChatList = () => {
         }
       });
 
-      const chatData = await Promise.all(promises);
+      const chatData = (await Promise.all(promises)).filter(chat => chat !== null);
+
 
       const uniqueReceiverIds = new Set();
       const filteredChats = chatData.filter(chat => {
-        if (uniqueReceiverIds.has(chat.user.id)) {
-          return false;
-        } else {
+        if (chat && chat.user && !uniqueReceiverIds.has(chat.user.id)) {
           uniqueReceiverIds.add(chat.user.id);
           return true;
         }
+        return false;
       });
 
       setChats(filteredChats);
@@ -234,23 +234,24 @@ const ChatList = () => {
     <div className='chatList'>
       <RoomList/>
       {filteredUsers.map((chat) => (
-        <div key={chat.chatId}>
-          {chat.user ? (
-            <div className='body2-child-1' onClick={() => handleAvatarClick(chat)}>
-              <div className='body2-child-1-left1'>
-                <div className='logo-body2'>
-                  <img src={chat.user.photoURL} alt="User Avatar" />
-                  <div className={`dot ${chat.user.isActive && isPageVisible ? 'red' : 'green'}`}></div>
-                </div>
-              </div>
-              <div className='body2-child-1-left2'>
-                <span>{chat.user.displayName}</span><br />
-                <p>{chat.lastMessage} - {calculateTimeAgo(chat.createdAt)}</p>
-              </div>
-            </div>
-          ) : null}
+  <div key={chat?.chatId}>
+    {chat?.user ? (
+      <div className='body2-child-1' onClick={() => handleAvatarClick(chat)}>
+        <div className='body2-child-1-left1'>
+          <div className='logo-body2'>
+            <img src={chat.user.photoURL} alt="User Avatar" />
+            <div className={`dot ${chat.user.isActive && isPageVisible ? 'red' : 'green'}`}></div>
+          </div>
         </div>
-      ))}
+        <div className='body2-child-1-left2'>
+          <span>{chat.user.displayName}</span><br />
+          <p>{chat.lastMessage} - {calculateTimeAgo(chat.createdAt)}</p>
+        </div>
+      </div>
+    ) : null}
+  </div>
+))}
+
       {isBackdropVisible && selectedUser && (
   <div className="moon-backdrop" ref={backdropRef}>
     <div className="moon-content">

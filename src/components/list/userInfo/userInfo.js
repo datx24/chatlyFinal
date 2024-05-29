@@ -83,13 +83,13 @@ const UserInfo = ({ onInputChange }) => {
 
         const uniqueReceiverIds = new Set();
         const filteredChats = chatData.filter(chat => {
-          if (uniqueReceiverIds.has(chat.user.id)) {
-            return false;
-          } else {
+          if (chat && chat.user && !uniqueReceiverIds.has(chat.user.id)) {
             uniqueReceiverIds.add(chat.user.id);
             return true;
           }
+          return false;
         });
+        
 
         setChats(filteredChats);
         setFilteredUsers(filteredChats); // Initialize filtered users with all chats

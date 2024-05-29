@@ -10,7 +10,7 @@ const ListAddStyled = styled.div`
     font-size: 20px;
     p{
         display: flex;
-        margin: 30px 0 0 0;
+        margin: 15px 0 0 0;
         font-weight: 600;
     }
     ul{
@@ -23,11 +23,12 @@ const ListAddStyled = styled.div`
         display: flex;
         justify-content: space-between;
         height: 46px;
-        margin: 10px 0;
+        margin-bottom: 10px;
         align-items:center;
     }
     .userImage img{
         height: 46px;
+        width: 46px;
         border-radius: 100%;
         border: 2px solid #238C9F;
     }
@@ -36,6 +37,9 @@ const ListAddStyled = styled.div`
     }
     .userName{
         margin: 10px 13px;
+        font-family: "Roboto", sans-serif;
+        color: #324B50;
+        font-size: 20px;
     }
 `
 

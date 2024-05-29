@@ -7,6 +7,7 @@ import { auth, db, storage } from '../lib/firebaseConfig';
 import { getDoc, doc, setDoc } from 'firebase/firestore'; 
 import upload from '../lib/upload';
 import { ref } from 'firebase/storage';
+import Logo from '../../images/Group 4.png'
 const MyInforStyle = styled.div`
     width: 471px;
     height: 372px;
@@ -40,8 +41,6 @@ const MyInforStyle = styled.div`
     .userName p{
       margin: 0 5px 0 15px;
       font-size: 25px;
-      width: 160px;
-      margin-left: 100px;
     }
     
     .userName i{
@@ -103,6 +102,8 @@ const MyInforStyle = styled.div`
     .inforDetail span{
       font-size: 15px;
       font-weight: 400;
+      color: #324B50;
+      
     }
     .inforDetail p{
       opacity: 0.6;
@@ -115,10 +116,38 @@ const MyInforStyle = styled.div`
       text-align: right;
     }
   `
+  const HeaderTab = styled.div`
+    display: flex;
+    height: 41px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 16px;
+    background-color: #324B50;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    position: relative;
+    .logo{
+        height: 100%;
+    }
+    .closeTab{
+        border: none;
+        outline: none;
+        background: none;
+        font-family: "Rubik", sans-serif;
+        font-weight: 900;
+        color: white;
+        font-size: 20px;
+    }
+    .closeTab:hover{
+        border: none;
+        background: none;
+        color: white;
+        cursor: pointer;
+    }
+`
 
 
-
-const MyInfor = ({show, handleHideMyInfor}) => {
+const MyInfor = ({onClose}) => {
   const [user, setUser] = useState(null);
   const [userImgUrl, setUserImgUrl] = useState('');
   const [isEditingName, setIsEditingName] = useState(false);
@@ -207,7 +236,13 @@ const MyInfor = ({show, handleHideMyInfor}) => {
   return (
     <Form>
       <MyInforStyle>
-        <TabHeader/>
+      <HeaderTab>
+          <img src={Logo} alt="logo" className="logo"></img>        
+          <button 
+              onClick={onClose}
+              className='closeTab'
+          >X</button>
+        </HeaderTab>
         <div className='userName'>
           {/* <img src={user?.photoURL} alt='userImage'/> */}
           <label htmlFor="fileInput" className="custom-file-upload">

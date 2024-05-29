@@ -123,7 +123,7 @@
     justify-content: left;
     height: 50%;
     width: 90%;
-    top: 3px;
+    top: 12px;
     border: none;
 }
 
@@ -154,24 +154,31 @@
     top: -500px;
 }
 
-.input-wrapper .selected-images {
+.selected-images {
     position: absolute;
-    display: inline-flex;
-    width: max-content;
-    height: 70px;
-    top: -118px;
-    left: -32px;
+    display: flex;
+    flex-wrap: wrap;
+    width: auto;
+    height: auto;
+    top: 532px;
     border: 1px solid black;
-    flex-direction: row;
-}
-
-.input-wrapper .selected-images img {
-    width: 80px;
-    height: 80px;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: #fff; /* Thêm nền trắng để rõ ràng hơn */
+  }
+  
+.selected-images img {
+    width: 60px; /* Giảm kích thước để gọn hơn */
+    height: 60px;
     object-fit: cover;
-    border-radius: 20%;
+    border-radius: 10%;
     margin-right: 5px;
-}
+    margin-bottom: 5px;
+  }
+  
+.selected-images img:last-child {
+    margin-right: 0;
+  }
 
 .body-child-right-2::-webkit-scrollbar {
     width: 10px;
@@ -239,18 +246,22 @@
 }
 
 .share-icon {
-    display: none;
+    /* display: none; */
     position: absolute;
     cursor: pointer;
     font-size: 16px;
 }
 
 .share-icon.left {
-    left: -25px;
+    left: 18px;
 }
 
 .share-icon.right {
     right: -25px;
+}
+.share-icon-left{
+    /* position: relative; */
+    left: 32px;
 }
 
 .message-text-wrapper:hover .share-icon {
@@ -258,7 +269,6 @@
 }
 
 .Message {
-    max-width: 50%;
     display: flex;
     margin-bottom: 10px;
 }
@@ -266,11 +276,15 @@
 .Message.own {
     align-self: flex-end;
     position: relative;
+    .text p{
+        background: rgba(226, 234, 235, 1);
+    }
 }
 
 .Message.own .texts p {
-    background-color: rgba(226, 234, 235, 1);
+    background: rgba(226, 234, 235, 1);
     margin-left: 38px;
+    display: block;
 }
 
 .Message img {
@@ -323,3 +337,105 @@
     margin-top: 5px; /* Khoảng cách giữa phần tử này và các phần tử khác */
   /* Thêm bất kỳ kiểu dáng tùy chỉnh nào khác bạn muốn áp dụng */
 }
+
+.message-file-wrapper{
+    display: flex;
+}
+.message-img-wrapper{
+    display: flex;
+    width: 500px;
+}
+
+.reply-preview{
+    position: relative;
+
+}
+
+/* CSS cho phần tin nhắn, file hoặc ảnh được chọn để trả lời */
+.reply-content {
+    background-color: #f3f4f6;
+    border-radius: 5px;
+    /* margin-bottom: 10px; */
+    position: absolute;
+    bottom:87px;
+
+  }
+  
+  .reply-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  
+  .reply-wrapper img {
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 10px;
+  }
+  
+  .file-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  
+  .file-wrapper p {
+    margin-right: 10px;
+  }
+  
+  .cancel-reply {
+    background-color: transparent;
+    border: none;
+    color: #f44336;
+    cursor: pointer;
+  }
+
+
+
+  .message-file-wrapper p,
+.file-wrapper p,
+.selected-file-name {
+  word-wrap: break-word; /* Cho phép xuống dòng nếu tên file ngắn */
+  max-width: 200px; /* Đặt kích thước tối đa để hiển thị tên file */
+  overflow: hidden; /* Ẩn phần tên file vượt quá */
+  text-overflow: ellipsis; /* Thêm dấu ba chấm nếu tên file quá dài */
+  white-space: nowrap; /* Không cho phép xuống dòng nếu tên file dài */
+}
+
+.message.highlight {
+    background-color: yellow; /* Màu nền để làm nổi bật tin nhắn */
+  }
+
+  .Message.highlight {
+    border: 2px solid black;
+  }
+
+ 
+  
+  .message-audio-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 8px;
+    max-width: 80%;
+    word-break: break-word;
+  }
+  
+  .message-audio-wrapper audio {
+    max-width: 100%;
+    outline: none;
+    margin-right: 10px;
+  }
+  
+  .message-audio-wrapper span {
+    font-size: 12px;
+    color: #666;
+  }
+
+  .body-child-right-3 span{
+    position: relative;
+    top:1px;
+  }
+  
+  
+
+  

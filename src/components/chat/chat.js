@@ -484,15 +484,6 @@ console.log('this is ', isUser);
   </div>
 ))}
 
-{/* Hiển thị tên tệp đã chọn trước khi gửi */}
-{selectedFile && <p>{selectedFile.name}</p>}
-  {images.length > 0 && (
-    <div className="selected-images">
-      {images.map((image, index) => (
-        <img key={index} src={URL.createObjectURL(image.file)} alt={`selected-image-${index}`} />
-      ))}
-    </div>
-  )}
         </div>
         {isBlocked ? (
   <div className="block-message">Bạn đã chặn người dùng này, không thể nhắn tin!</div>

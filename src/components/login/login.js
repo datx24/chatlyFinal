@@ -58,38 +58,6 @@ const Login = ({ setUser, onSignIn }) => {
     }
   };
 
-  const signInWithFacebook = async () => {
-    try {
-      const result = await signInWithPopup(auth, facebookProvider);
-      const user = result.user;
-
-      // Upload user's avatar image to Firebase Storage
-      const storageRef = ref(storage, 'avatars/' + user.uid);
-      const snapshot = await uploadBytes(storageRef, user.photoURL);
-      const photoURL = await getDownloadURL(snapshot.ref);
-
-      // Add user data to Firestore
-      const userRef = doc(db, 'users', user.uid);
-      await setDoc(userRef, {
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: photoURL,
-        id: user.uid,
-        phoneNumber: user?.phoneNumber,
-        gender: user?.gender,
-        birthDay: ''
-        // Add other user data as needed
-      });
-
-      setValue(user.email);
-      localStorage.setItem('email', user.email);
-      setUser({...user, displayName: user.displayName, photoURL: photoURL });
-      onSignIn(); // Notify the parent component that the user has signed in
-    } catch (error) {
-      console.error('Error signing in with Facebook:', error);
-    }
-  };
-
   const handleSubmitRegister = async (e) => {
     e.preventDefault();
     if (!/^[^ ]+@[^ ]+\.[a-z]{2,3}$/.test(email)){
@@ -190,7 +158,7 @@ const Login = ({ setUser, onSignIn }) => {
                       />
                       Đăng nhập với Google
                     </button>
-                    <button type='submit' onClick={(event) => signInWithFacebook(event)} className="btn-ff">
+                    <button type='submit' className="btn-ff">
                       <img
                         src="https://scontent.xx.fbcdn.net/v/t1.15752-9/434559141_966125155051284_8896615487383647192_n.png?stp=cp0_dst-png&_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_ohc=C3uy7N5k_HkAb5t1s7H&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QFB7Wp4Waem9aBkRNYXRG3qaHEy1uRhcNHWtEcxFptz5w&oe=6646F269"
                         alt="Facebook Icon"
