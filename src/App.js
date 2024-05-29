@@ -62,14 +62,16 @@ const App = () => {
 
   return (
     <div>
-      <Header />
       <div className="container">
+      <Header />
+      <div className="container-body">
         <List />
         {chatId && <Chat />}
         {/* <UserList /> */}
         {/* <button onClick={handleShowMyInfo}>MyInfor</button>
         {showMyInfo && <MyInfor onHide={handleHideMyInfo} />} */}
       </div>
+    </div>
     </div>
   );
 };
