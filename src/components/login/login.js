@@ -7,6 +7,7 @@ import upload from '../lib/upload';
 import './login.css'
 import logoFacebook from '../../images/bxl-facebook.svg.png'
 import logoChatly from '../../images/Group 4.png'
+import logoGoogle from '../../images/bxl-google.svg.png'
 
 const Login = ({ setUser, onSignIn }) => {
   const [value, setValue] = useState('');
@@ -153,14 +154,14 @@ const Login = ({ setUser, onSignIn }) => {
                   <div>
                     <button onClick={(event) => signInWithGoogle(event)} className="btn-gg">
                       <img
-                        src={logoFacebook}
+                        src={logoGoogle}
                         alt="Google Icon"
                       />
                       Đăng nhập với Google
                     </button>
                     <button type='submit' className="btn-ff">
                       <img
-                        src="https://scontent.xx.fbcdn.net/v/t1.15752-9/434559141_966125155051284_8896615487383647192_n.png?stp=cp0_dst-png&_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_ohc=C3uy7N5k_HkAb5t1s7H&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QFB7Wp4Waem9aBkRNYXRG3qaHEy1uRhcNHWtEcxFptz5w&oe=6646F269"
+                       src={logoFacebook}
                         alt="Facebook Icon"
                       />
                       Đăng nhập với Facebook
