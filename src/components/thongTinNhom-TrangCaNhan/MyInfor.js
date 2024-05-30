@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Form } from 'antd';
 import TabHeader from '../Tab/Components/TabHeader';
+import HeaderSub from '../header/HeaderSub';
 import { useState, useEffect } from 'react';
 import { auth, db, storage } from '../lib/firebaseConfig';
 import { getDoc, doc, setDoc } from 'firebase/firestore'; 
@@ -236,10 +237,11 @@ const MyInfor = ({onClose}) => {
   return (
     <Form>
       <MyInforStyle>
+      {/* <HeaderSub/> */}
       <HeaderTab>
           <img src={Logo} alt="logo" className="logo"></img>        
           <button 
-              onClick={onClose}
+              onClick={handleShowMyInfo}
               className='closeTab'
           >X</button>
         </HeaderTab>
