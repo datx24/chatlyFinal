@@ -14,38 +14,40 @@ import deleteMember from "../lib/deleteMember";
 import updateNameGroup from "../lib/updateNameGroup";
 import updateGroupImage from "../lib/updateGroupImage";
 const GroupInfoStyled = styled.div`
-    ${'' /* position:absolute; */}
-    position: absolute;
     right: 0%;
     top: 5%;
     width: 471px;
     height: 582px;
     border: 1px solid black;
     border-radius: 20px;
+    z-index: 500;
+    position: fixed;
+    z-index: 500;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     background-color: white;
-    z-index: 1;
+    p, h3{
+      margin: 0;
+    }
     .group_name_members_2 h3{
         font-family: "Roboto", sans-serif;
         font-weight: 700;
         font-size: 25px;
         font-style: normal;
         color: #324b50;
-        margin-top: 16px;
     }
     .group_name_members{
-        padding-top: 0px;
-        padding-bottom: 7px;
-        padding-left: 16px;
-        padding-right: 40px;
+        padding: 0 16px;
         align-items: center;
         display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
         height: 91px;
+        margin: 10px 0;
     }
     .group_name_members_1{
         line-height: 25px;
         padding-left: 0px;
+        margin-left: 100px;
     }
     .group_name_members_1 p{
         font-family: "Roboto", sans-serif;
@@ -55,7 +57,7 @@ const GroupInfoStyled = styled.div`
     }
     .group_actions::before{
         content: "";
-        width: 471px;
+        width: 100%;
         height: 5px;
         background-color: #dbe3e4;
         position: absolute;
@@ -71,9 +73,11 @@ const GroupInfoStyled = styled.div`
         padding-top: 20px;
         padding-bottom:10px;
     }
-    .group_actions_1 .pinned_message{
+    .group_actions_1_detail{
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
     }
     .pinned_message p{
         font-family: "Roboto", sans-serif;
@@ -100,10 +104,6 @@ const GroupInfoStyled = styled.div`
         padding: 0px 16px;
         margin-bottom:0px;
     }
-    .group_actions_1 .group_members{
-        display: flex;
-        justify-content: space-between;
-    }
     .group_members i{
         font-size: 24px;
         margin-top: 0px;
@@ -123,10 +123,7 @@ const GroupInfoStyled = styled.div`
         color: #324b50;
         padding-left: 20px;
         line-height: 45px;
-    }
-    .group_actions_1 .exit-chat{
-        display: flex;
-        justify-content: space-between;
+        margin: 0;
     }
     .exit-chat i{
         font-size: 24px;
@@ -171,7 +168,7 @@ const GroupInfoStyled = styled.div`
     }
     .group_actions_2::before{
         content: "";
-        width: 471px;
+        width: 100%;
         height: 5px;
         background-color: #dbe3e4;
         position: absolute;
@@ -202,22 +199,38 @@ const GroupInfoStyled = styled.div`
         height:91px;
         cursor: pointer;
     }
-    .closeTab{
-        border: none;
-        background: none;
-        font-family: "Rubik", sans-serif;
-        font-weight: 900;
-        color: white;
-        font-size: 20px;
-        position: relative;
-        top: -6%;
-        right: -94%;
-    }
-    .closeTab:hover{
-        border: none;
-        background: none;
-        color: white;
-    }
+`
+const HeaderTab = styled.div`
+display: flex;
+height: 41px;
+justify-content: space-between;
+align-items: center;
+padding: 0px 16px;
+background-color: #324B50;
+border-top-left-radius: 18px;
+border-top-right-radius: 18px;
+position: relative;
+.logo{
+    height: 100%;
+}
+.closeTab{
+    border: none;
+    outline: none;
+    background: none;
+    font-family: "Rubik", sans-serif;
+    font-weight: 900;
+    color: white;
+    font-size: 20px;
+    position: absolute;
+    left: 451px;
+    top: 9px;
+}
+.closeTab:hover{
+    border: none;
+    background: none;
+    color: white;
+    cursor: pointer;
+}
 `
 var memberNameFist, memberNameSecond, numberOfMembers1;
 const GroupInfo = ({ onClose }) => {
@@ -356,10 +369,23 @@ const GroupInfo = ({ onClose }) => {
       <GroupInfoStyled>
       <HeaderSub/>
 
-     <button 
-      onClick={onClose}
-      className='closeTab'
-      >X</button>
+      <button 
+  onClick={onClose}
+  style={{
+    position: 'absolute',
+    top: '7px',
+    left: '441px',
+    border: 'none',
+    outline: 'none',
+    background: 'transparent',
+    fontFamily: '"Rubik", sans-serif',
+    fontWeight: 900,
+    color: 'white',
+    fontSize: '20px'
+  }}
+>
+  X
+</button>
 
         <div className="group_name_members">
           <div className="group-image">

@@ -37,7 +37,7 @@ const ChatList = () => {
   const [isUserBlocked, setIsUserBlocked] = useState(false);
   const [showBlockMessage, setShowBlockMessage] = useState(false);
   const {blockUser, unblockUser, listenBlockedUsers } = useChatStore(); // Destructure the required functions from useChatStore
-
+  const [selectedUserInfo, setSelectedUserInfo] = useState({});
   const toggleChatVisibility = () => {
     setIsChatVisible((prev) => !prev);
   };
@@ -113,16 +113,19 @@ const ChatList = () => {
   };
 
   const handleAvatarClick = async (chat) => {
-    setIsUser(false);
-    if (chat && chat.user) {
-      setSelectedUser(chat.user);
-      changeChat(chat.chatId, chat.user);
-      setIsBackdropVisible(true);
-      await updateLastActive(chat.user.id); // Sử dụng await để đợi hàm updateLastActive hoàn thành
-    } else {
-      console.error('User data is not available for chat', chat);
-    }
-  };
+  setIsUser(false);
+  if (chat && chat.user) {
+    setSelectedUser(chat.user);
+    changeChat(chat.chatId, chat.user);
+    setIsBackdropVisible(true);
+    await updateLastActive(chat.user.id);
+    setSelectedUserInfo(chat.user); // Set selected user info here
+  } else {
+    console.error('User data is not available for chat', chat);
+  }
+};
+
+  
 
   const updateLastActive = async (userId, isActive = true) => {
     const userDocRef = doc(db, 'users', userId);
@@ -264,7 +267,7 @@ const ChatList = () => {
     </div>
   </div>
 )}
-     
+
     </div>
   );
 };

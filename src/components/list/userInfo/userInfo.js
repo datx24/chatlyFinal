@@ -188,7 +188,7 @@ const UserInfo = ({ onInputChange }) => {
             </div>
           </div>
           <div className="user-name">
-            <span>{userDisplayName}</span>
+            <span className="displayName">{userDisplayName}</span>
             <div className="user-icon">
               <img
                 className='icon-bell'

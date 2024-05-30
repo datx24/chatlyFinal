@@ -58,6 +58,14 @@
     align-items: left;
     justify-content: center;
     flex-direction: column;
+      .displayName{
+        position: absolute;
+        top:5px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 500;
+        font-size: 25px;
+        color: rgba(35, 140, 159, 1);
+      }
   }
   
   .user-name span {

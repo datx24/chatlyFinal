@@ -269,6 +269,9 @@
 .Message.own .texts p {
     background-color: rgba(226, 234, 235, 1);
     margin-left: 38px;
+    max-width: 370px;
+    word-wrap: break-word;
+    height: fit-content;
 }
 
 .Message img {
@@ -294,6 +297,7 @@
 }
 
 .texts p {
+    max-width: 400px;
     width: max-content;
     font-family: 'Roboto', sans-serif;
     padding: 10px 15px;
@@ -303,6 +307,7 @@
     font-weight: 400;
     color: black;
     position: relative;
+    word-wrap: break-word;
 }
 
 .texts span {
@@ -324,15 +329,18 @@
 
 
 .reply-wrapper {
-    background-color: #2d2d2d; /* Màu nền trầm */
-    color: #ffffff; /* Màu chữ trắng nổi bật */
-    padding: 15px;
-    border-radius: 8px;
+    background-color: #E2EAEB; /* Màu nền trầm */
+    color: black; /* Màu chữ trắng nổi bật */
+    padding: 10px;
     margin: 10px 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
     position: absolute;
-    top: 571px;
-    width: 200px;
+    top: 84%;
+    left: 30%;
+    width: 65%;
+    max-width: 71%;
+    z-index: 0;
+    overflow: hidden;
   }
   
   .reply-wrapper p {
@@ -382,5 +390,14 @@
   
   .cancel-reply:hover {
     background-color: #ff6666; /* Màu nền đỏ khi hover */
+  }
+
+.reply-wrapper img{
+    height: 30px;
+  }
+
+  .selected-images img{
+    width: 50px;
+    height: 50px;
   }
   

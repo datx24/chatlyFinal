@@ -1,6 +1,7 @@
 import { Button, Form } from "antd";
 import React from "react";
 import styled from 'styled-components';
+import LogoChatLy from '../../images/Group 4.png'
 
 const HeaderTab = styled.div`
     display: flex;
@@ -33,7 +34,7 @@ const HeaderTab = styled.div`
 export default function HeaderSub(){
     return(
         <HeaderTab>
-            <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/434521997_782614083797588_95458143183886990_n.png?_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_ohc=0E7GRRKCtLgAb7IszO7&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QFi4WhedGa3i492Qb-ypQ3JXdBOR2LTtEYHNdm2kkgKSw&oe=664E7A07" alt="logo" className="logo"></img>
+            <img src={LogoChatLy} alt="logo" className="logo"></img>
             {/* <button className="closeTab"><span >X</span></button> */}
             
         </HeaderTab>

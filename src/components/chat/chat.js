@@ -61,7 +61,7 @@ const Chat = () => {
   const mediaRecorder = useRef(null); // Ref để lưu trữ MediaRecorder instance
   const chunks = useRef([]); // Ref để lưu trữ các phần dữ liệu ghi âm
   const [audioUrl, setAudioUrl] = useState(null);
-  
+
 
   const handleBlockClick = () => {
     toggleChatVisibility();
@@ -444,7 +444,7 @@ const handleVoiceRecord = async () => {
         if (mediaRecorder.current && mediaRecorder.current.state === 'recording') {
           mediaRecorder.current.stop();
         }
-      }, 3000);
+      }, 10000);
     }
   } catch (error) {
     console.error('Error recording voice:', error);
@@ -525,28 +525,21 @@ const cancelReply = () => {
 
       </div>
           <div className='body-child-right-1-right'>
-            <div className='body-child-right-1-right-1'>
-            {isUser ?  
-                <img src={UserPlus}
-                onClick={toggleForm}
-                style={imgStyles}
-                /> :  <span></span>
-                }
-              
-              {addMode && <AddUser />}
-            </div>
-            <div className='body-child-right-1-right-1'>
-              <img src={Phone} />
-            </div>
-            <div className='body-child-right-1-right-1'>
-            
+          <div className='body-child-right-1-right-1'>
+            {isUser ? 
               <img src={Setting}
                 onClick={handleShowGroupInfo} /> 
-              
+              : 
+              <img src={Setting}/>
+            }
             {/* ------------------------------------- */}
 
             {isGroupInfoVisible && <GroupInfo onClose={handleGroupInfoToggle}/>}
             </div>
+            <div className='body-child-right-1-right-1'>
+              <img src={Phone} />
+            </div>
+            
           </div>
         </div>
         <div className="body-child-right-2">

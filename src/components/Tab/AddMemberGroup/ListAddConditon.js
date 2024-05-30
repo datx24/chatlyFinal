@@ -8,8 +8,7 @@ const ListAddStyled = styled.div`
     color: #324B50;
     font-size: 20px;
     p {
-        display: flex;
-        margin: 30px 0 0 0;
+        margin: 10px 0;
         font-weight: 600;
     }
     ul {
@@ -28,6 +27,7 @@ const ListAddStyled = styled.div`
     }
     .userImage img {
         height: 46px;
+        width: 46px;
         border-radius: 100%;
         border: 2px solid #238C9F;
     }
@@ -48,7 +48,7 @@ function UserItem({ user }) {
     );
 }
 
-export default function ListAddConditon({ groupId, groupMembers, onSelectUsers }) {
+export default function ListAddConditon({ groupId, groupMembers, onSelectUsers, filteredMembers }) {
     const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     // console.log('Members in Group: ',groupMembers);
@@ -94,7 +94,7 @@ export default function ListAddConditon({ groupId, groupMembers, onSelectUsers }
             <p>Gợi ý</p>
             <ul>
                 {users.length > 0 ? (
-                    users.map(user => (
+                    filteredMembers.map(user => (
                         <li key={user.id}>
                             <UserItem
                                 user={user}
@@ -107,7 +107,7 @@ export default function ListAddConditon({ groupId, groupMembers, onSelectUsers }
                         </li>
                     ))
                 ) : (
-                    <li>Không có người dùng</li>
+                    <li>Không có thành viên</li>
                 )}
             </ul>
         </ListAddStyled>

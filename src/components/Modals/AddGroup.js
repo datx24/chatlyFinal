@@ -39,6 +39,7 @@ const AddGroupStyled = styled.div`
     }
     .search_bar i{
         font-size: 10px;
+        margin-right: 5px;
     }
     .in-search {
         width: 100%;
@@ -63,7 +64,6 @@ const AddGroupStyled = styled.div`
         align-items: center;
         display: flex;
         margin-bottom: 20px;
-        justify-content: space-between;
     }
     .input_group{
         outline: none;
@@ -134,6 +134,7 @@ const HeaderTab = styled.div`
         cursor: pointer;
     }
 `
+
 export default function AddGroup({ onClose}){
     const { currentUser} = useUserStore();
     const [image, setImage] = useState(null);

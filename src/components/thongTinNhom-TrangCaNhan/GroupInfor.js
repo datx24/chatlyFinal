@@ -1,129 +1,229 @@
 import React, { useState, useEffect }  from "react";
-import { db, auth } from '../lib/firebaseConfig';
-import { getFirestore, collection, query, where, getDocs, getDoc } from 'firebase/firestore';
-import OtherUser from '../Tab/OtherUser/OtherUser';
 import HeaderSub from '../header/HeaderSub';
 import Header from "../Modals/Header";
 import AddMemberGroup from "../Tab/AddMemberGroup/AddMemberGroup";
-import { memberNameFist, memberNameSecond, numberOfMembers1 } from "../Modals/GroupInfo";
 import styled from "styled-components";
-const GroupInforStyle = styled.div`
- position: relative;
- top: -85%;
- height: 582px;
+import Logo from "../../images/Group 4.png"
+import { useSearch } from '../lib/searchContext'; // Import SearchContext
 
- .closeTab{
+const GroupInforStyle = styled.div`
+  position: fixed;
+  height: 582px;
+  z-index: 1000;
+  background-color: white;
+  top: 0;
+  left: 100%;
+  transform: translateX(-100%);
+  animation: moveLeft 0.5s ease forwards;
+  width: 471px;
+  border-radius: 20px;
+  border: 1px solid black;
+  font-family: "Roboto", sans-serif;
+
+  @keyframes moveLeft {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+  }
+  p,
+  h3{
+    margin: 0;
+    cursor: default;
+  }
+  .close-tab{
+    outline: none;
+  }
+  .group-name-members{
+    padding: 20px 16px 20px 16px;
+    margin-bottom: 20px;
+    display: flex;
+  }
+  .group-name-members img{
+    width: 91px;
+    height: 91px;
+    border-radius: 50%;
+    border: 2px solid #238c9f;
+  }
+  .group-name-members_1 {
+    margin: 0 0 0 10px;
+  }
+  .group-name-members::before{
+    position: absolute;
+    content: '';
+    height: 5px;
+    width: 100%;
+    background-color: #DBE3E4;
+    top: 155px;
+    left: 0;
+  }
+  .group-list{
+    padding: 0 16px 20px 16px;
+  }
+  .group-list-title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .group-list-title h3{
+    font-size: 20px;
+    color: #324B50;
+  }
+  .input-group{
+    display: flex;
+    align-items: center;
+    border: 1px solid #324B50;
+    border-radius: 30px;
+    height: 30px;
+    width: 50%;
+    padding: 0 5px;
+  }
+  .input-group input{
+    height: 100%;
     border: none;
+    outline: none;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px; 
+  }
+  .input-group i{
+    font-size: 18px;
+    color: #324B50;
+    margin-right: 5px;
+  }
+  .group-list-member{
+    overflow-y: auto;
+    height: 300px;
+    font-weight: 500;
+  }
+  .member{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .member-avatar{
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 2px solid #238C9F;
+  }
+  .member-name{
+    margin-left: 10px;
+    font-size: 20px;
+    cursor: default;
+  }
+  .member-option{
+    cursion: pointer;
+  }
+  .add-member-btn{
+    border: none;
+    background-color: #324B50;
+    color: white;
+    width: 202px;
+    height: 34px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 20;
+  }
+`
+
+const HeaderTab = styled.div`
+display: flex;
+height: 41px;
+justify-content: space-between;
+align-items: center;
+padding: 0px 16px;
+background-color: #324B50;
+border-top-left-radius: 18px;
+border-top-right-radius: 18px;
+position: relative;
+.logo{
+    height: 100%;
+}
+.close-tab{
+    border: none;
+    outline: none;
     background: none;
     font-family: "Rubik", sans-serif;
     font-weight: 900;
     color: white;
     font-size: 20px;
-    position: absolute;
-    top: 1%;
-    right: 2%;
-
-    }
-    .closeTab:hover{
-        border: none;
-        background: none;
-        color: white;
-    }
+}
+.close-tab:hover{
+    border: none;
+    background: none;
+    color: white;
+    cursor: pointer;
+}
 `
 
-function GroupInfor(props) {
+function GroupInfor({ member, groupName, ImgGroup, onClose }) {
   const [isAddGroupVisible, setIsAddGroupVisible] = useState(false);
-  const [isDisUseVisible, setIsDisUseVisible] = useState(false);
-  const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredMembers, setFilteredMembers] = useState(member);
 
-  useEffect(() => {
-    // Truy vấn Firestore để lấy danh sách người dùng
-    const fetchUsers = async () => {
-        const usersRef = collection(db, 'users');
-        const snapshot = await getDocs(usersRef);
-        const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setUsers(users);
-    };
-
-    fetchUsers();
-}, []);
-  const handleUserClick = (user) => {
-    setSelectedUser(user);
-  };
-
-  const handleUserToggle =() => {
-    setIsDisUseVisible(!isDisUseVisible);
-  };
 
   const handleAddGroupToggle = () => {
     setIsAddGroupVisible(!isAddGroupVisible);
   };
 
-  const arr = Object.keys(props.member).map(key => props.member[key]);
-  // console.log("this: ", memberNameFist,memberNameSecond, numberOfMembers1)
+  useEffect(() => {
+    const filtered = member.filter(m => 
+        m.displayName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredMembers(filtered);
+}, [searchTerm, member]);
+
+  // Hàm xử lý thay đổi của search bar
+  const handleSearchChange = (e) => {
+      setSearchTerm(e.target.value);
+  };
+  
+
+  const arr = Object.keys(member).map(key => member[key]);
+
   return (
-    <GroupInforStyle className="card m-auto" style={{ width: "471px", borderRadius: "20px", border: "2px solid #333" }}>
-     <HeaderSub/>
-     <button 
-        onClick={props.onClose}
-        className='closeTab'
-      >X</button>
-      <div className="d-flex justify-content-evenly align-content-center m-3">
-        <img src={props.ImgGroup} style={{width: '25%', border: '2px solid #238C9F', 'borderRadius':'100%' }} alt="..." />
-        <div className="d-flex flex-column pe-3">
-          <h5 className="d-block mb-0 mt-3 me-2" style={{ marginLeft: "8px" }}>{props.groupName}</h5>
-          <p className="d-block" style={{ marginLeft: "8px" }}>Bao gồm {memberNameFist}, {memberNameSecond} và {numberOfMembers1} người khác</p>
+    <GroupInforStyle className="card m-auto">
+      <HeaderTab>
+          <img src={Logo} alt="logo" className="logo"></img>        
+          <button 
+              onClick={onClose}
+              className='close-tab'
+          >X</button>
+        </HeaderTab>
+      <div className="group-name-members">
+        <img src={ImgGroup} alt="..." />
+        <div className="group-name-members_1">
+          <h3>{groupName}</h3>
+          <p>Đây là nhóm của tôi</p>
         </div>
       </div>
-      <div className="m-1" style={{ border: "2px solid #ccc" }}></div>
-      <div className="card-body pt-1">
-        <div className="row">
-          <div className="col-6">
-            <h6 className="card-title mb-0" style={{ lineHeight: "36px" }}>Danh sách thành viên</h6>
-          </div>
-          <div className="col-6">
-            <div className="input-group rounded">
-              <input type="search" className="form-control rounded-pill" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-              <span className="input-group-text border-0 rounded-pill" id="search-addon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                </svg>
-              </span>
-            </div>
+      <div className="group-list">
+        <div className="group-list-title">
+          <h3>Danh sách thành viên</h3>
+          <div className="input-group">
+            <i class='bx bx-search-alt'></i>
+            <input type="search" placeholder="Tìm tên thành viên" aria-label="Search" aria-describedby="search-addon" value={searchTerm} onChange={handleSearchChange}/>
           </div>
         </div>
-        <div className="overflow-auto p-0 bg-body-tertiary" style={{ width: "auto", maxHeight: "300px" }}>
-          
-          {arr.map(user => (
-            <div className="d-flex"  key={user.id}>
-              <div className="m-1" style={{ width: "46px", height: "46px" }}><img src={user.photoURL} style={{ width: "100%" }} alt="..." /></div>
-              <div className="m-1 w-75"><h6 style={{ lineHeight: "46px" }}>{user.displayName}</h6></div>
-              <div className="m-3">
-                <a 
-                  className="link-underline-dark" 
-                  style={{ width: "10%", cursor: "pointer" }} 
-                  onClick={() => {
-                  handleUserClick(user);
-                  handleUserToggle();
-                  }}
-                  >
-                  ...
-                </a>
+        <div className="group-list-member">
+          {filteredMembers.map(member1 => (
+            <div className= "member"  key={member1.id}>
+              <div style={{display: 'flex', alignItems: 'center'}}>
+                <img src={member1.photoURL} className="member-avatar" alt="..." />
+                <h3 className="member-name">{member1.displayName}</h3>
               </div>
+              <a className="member-option">...</a>
             </div>
           ))}
         </div>
-        <button onClick={handleAddGroupToggle}>Thêm thành viên</button>
+        <div style={{display: 'flex', justifyContent: 'center'}}>
+          <button className="add-member-btn" onClick={handleAddGroupToggle}>Thêm thành viên</button>
+        </div>
         {isAddGroupVisible && <AddMemberGroup onClose={handleAddGroupToggle} />}
-        {selectedUser && isDisUseVisible && (
-          <div>
-            <OtherUser 
-              selectedUser={selectedUser}
-              onClose={handleUserToggle} 
-            />
-          </div>
-        )}
       </div>
     </GroupInforStyle>
 

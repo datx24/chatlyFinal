@@ -1,14 +1,13 @@
 import { Form } from "antd";
 import React, { useState, useEffect,useContext } from "react";
 import styled from 'styled-components';
-import { collection, doc, setDoc } from "firebase/firestore"; 
-import TabHeader from "../Components/TabHeader";
-import HeaderSub from "../../header/HeaderSub";
+import { collection, doc, setDoc, getDocs } from "firebase/firestore"; 
 import ListAddConditon from "./ListAddConditon";
 import { db } from "../../lib/firebaseConfig";
 import addMembersToGroup from "../../lib/addMembersToGroup";
 import getGroupMembers from "../../lib/getGroupMembers";
 import { SelectedGroupContext } from "../../ChatRoom/SelectedGroupContext";
+import Logo from "../../../images/Group 4.png"
 export const TabStyled = styled.div`
     width: 471px;
     height: 582px;
@@ -16,14 +15,24 @@ export const TabStyled = styled.div`
     border-radius: 20px;
     position: absolute;
     top: 0%;
-    right: 0%;
+    left: 100%;
+    animation: moveLeft 0.5s ease forwards;
     background:#fff;
+    transform: translateX(-100%);
+    @keyframes moveLeft {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-100%);
+        }
+      }
     
-    .bodyTab{
+    .body-tab{
         padding: 0px 16px;
         position: relative;
     }
-    .titleText{
+    .title-text{
         margin: 0px;
         text-align: center;
         font-size: 25px;
@@ -32,7 +41,7 @@ export const TabStyled = styled.div`
         font-family: "Roboto", sans-serif;
         color: #324B50;
     }
-    .searchBar{
+    .search-bar{
         border: 1px solid #324B50;
         display: flex;
         height: 30px;
@@ -40,7 +49,10 @@ export const TabStyled = styled.div`
         align-items: center;
         padding: 0px 10px;
     }
-    .searchInput{
+    .search-bar i{
+        margin-right: 5px;
+    }
+    .search-input{
         width: 100%;
         outline: none;
         border: none;
@@ -48,16 +60,16 @@ export const TabStyled = styled.div`
         opacity: 0.5;
         position: relative;
     }
-    .bodyTab::before{
+    .body-tab::before{
         content: "";
         background-color: #DBE3E4;
         width: 100%;
         height: 5px;
-        top: 90px;
+        top: 110px;
         left: 0;
         position: absolute;
     }
-    .addBtn{
+    .add-btn{
         background-color: #324B50;
         padding: 6px 75px;
         border-radius: 10px;
@@ -65,26 +77,40 @@ export const TabStyled = styled.div`
         font-sỉze: 20px;
         font-weight: 700;
         color: white;
-        margin: 20px 0;
+        margin: 10px 0;
         cursor: pointer;
     }
-    .closeTab{
+`
+
+const HeaderTab = styled.div`
+    display: flex;
+    height: 41px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 16px;
+    background-color: #324B50;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    position: relative;
+    .logo{
+        height: 100%;
+    }
+    .close-tab{
         border: none;
+        outline: none;
         background: none;
         font-family: "Rubik", sans-serif;
         font-weight: 900;
         color: white;
         font-size: 20px;
-        position: absolute;
-        top: 1%;
-        right: -1%;
     }
-    .closeTab:hover{
+    .close-tab:hover{
         border: none;
         background: none;
         color: white;
+        cursor: pointer;
     }
-`;
+`
 
 
 
@@ -94,53 +120,84 @@ export default function AddMemberGroup({ onClose }){
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [groupId, setGroupId] = useState(selectedGroup.GroupId); // Giá trị ban đầu của groupId
     const [groupMembers, setGroupMembers] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredMembers, setFilteredMembers] = useState(users);
+
+
 
     useEffect(() => {
         // Thực hiện truy vấn và cập nhật danh sách thành viên của nhóm
         // lấy ra danh sách thành viên có trong nhóm
-        const fetchGroupMembers = async () => {
-          const members = await getGroupMembers(groupId);
-          setGroupMembers(members);
+    const fetchGroupMembers = async () => {
+        const members = await getGroupMembers(groupId);
+        setGroupMembers(members);
+    };
+
+    fetchGroupMembers();
+    }, [groupId]);
+
+
+    const handleSelectedUsers = (selectedUsers) => {
+    setSelectedUsers(selectedUsers);
+    };
+    
+    useEffect(() => {
+        // Truy vấn Firestore để lấy danh sách người dùng
+        const fetchUsers = async () => {
+            const usersRef = collection(db, 'users');
+            const snapshot = await getDocs(usersRef);
+            const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setUsers(users);
         };
     
-        fetchGroupMembers();
-      }, [groupId]);
+        fetchUsers();
+    }, []);
 
-      const handleSelectedUsers = (selectedUsers) => {
-        setSelectedUsers(selectedUsers);
-      };
+    useEffect(() => {
+        const filtered = users.filter(m => 
+            m.displayName.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredMembers(filtered);
+    }, [searchTerm, users]);
     
-       
-      
-      const handleClick = () => {
-        // Thực hiện việc thêm thành viên vào nhóm
-        addMembersToGroup(groupId, selectedUsers);
+      // Hàm xử lý thay đổi của search bar
+      const handleSearchChange = (e) => {
+          setSearchTerm(e.target.value);
       };
+      
+    const handleClick = () => {
+    // Thực hiện việc thêm thành viên vào nhóm
+    addMembersToGroup(groupId, selectedUsers);
+    };
     return(
         <TabStyled>
             
             <Form>
-                <HeaderSub/>
+            <HeaderTab>
+                <img src={Logo} alt="logo" className="logo"></img>        
                 <button 
                     onClick={onClose}
-                    className='closeTab'
+                    className='close-tab'
                 >X</button>
-                <div className="bodyTab">
+            </HeaderTab>
+                <div className="body-tab">
                     <div className="title">
-                        <h3 className="titleText">Thêm thành viên</h3>
-                        <div className="searchBar">
+                        <h3 className="title-text">Thêm thành viên</h3>
+                        <div className="search-bar">
                             <i class='bx bx-search-alt icon' style = {{fontSize:"18px", color: "#324B50"}}></i>
-                            <input className="searchInput" placeholder ="Tên người dùng"></input>
+                            <input className="search-input" placeholder ="Tên người dùng" onChange={handleSearchChange} value={searchTerm}></input>
                         </div>
                     </div>
                     <ListAddConditon
                         groupId={groupId}
                         groupMembers={groupMembers}
                         onSelectUsers={handleSelectedUsers}
+                        filteredMembers = {filteredMembers}
                     />
                 </div>
                 <div style={{display: "flex", justifyContent: "center"}}>
-                <button onClick={handleClick}>Thêm</button>
+                <button className="add-btn" onClick={handleClick}>Thêm</button>
 
                 </div>
             </Form>
