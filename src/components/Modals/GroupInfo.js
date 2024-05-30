@@ -221,9 +221,6 @@ position: relative;
     font-weight: 900;
     color: white;
     font-size: 20px;
-    position: absolute;
-    left: 451px;
-    top: 9px;
 }
 .closeTab:hover{
     border: none;
@@ -438,7 +435,7 @@ const GroupInfo = ({ onClose }) => {
           <h3>Thông tin về đoạn chat</h3>
           <ul>
             <li className="group_actions_1">
-              <div className="pinned_message">
+              <div className="pinned_message group_actions_1_detail">
                 <i className="bx bx-pin" />
                 <p>Xem tin nhắn đã ghim</p>
               </div>
@@ -447,12 +444,12 @@ const GroupInfo = ({ onClose }) => {
               </button>
             </li>
             <li className="group_actions_1">
-              <div className="group_members">
+              <div className="group_members group_actions_1_detail">
                 <i className="bx bx-search-alt" />
                 <p>Xem thành viên trong đoạn chat</p>
               </div>
               <button className="forward" onClick={handleGroupInForToggle}>
-                <ArrowRightOutlined />
+              <i className="bx bx-right-arrow-alt" />
               </button>
               
             </li>
@@ -462,14 +459,14 @@ const GroupInfo = ({ onClose }) => {
           <h4>Quyền riêng tư và hỗ trợ</h4>
           <ul>
             <li className="group_actions_1">
-              <button className="exit-chat">
+              <button className="exit-chat group_actions_1_detail">
                 <i className="bx bx-exit" />
                 <p>Rời khỏi đoạn chat</p>
               </button>
             </li>
             <li className="group_actions_1">
               {isLeader && (
-                <button className="exit-chat">
+                <button className="exit-chat group_actions_1_detail">
                   <i className='bx bx-trash'></i>
                   <p>Giải tán nhóm</p>
                 </button>
