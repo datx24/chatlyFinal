@@ -27,13 +27,13 @@ const Edit = () => {
   };
 
   const handleProfileClick = () => {
-    setState({...state, showProfile: true, profile: 'Action in progress...' });
-    setOpenMyInfo(true);
+    // setState({...state, showProfile: true, profile: 'Action in progress...' });
+    setOpenMyInfo(!openMyInfo);
   };
 
   const handleGroupClick = () => {
     setState({...state, group: 'Action in progress...' });
-    setOpenAddGroup(true);
+    setOpenAddGroup(!openAddGroup);
   };
 
   const handleSettingsClick = () => {
@@ -42,8 +42,8 @@ const Edit = () => {
 
   return (
   <>
-  {openMyInfo && <MyInfor/>}
-  {openAddGroup && <AddGroup/>}
+  {openMyInfo && <MyInfor onClose={handleProfileClick}/>}
+  {openAddGroup && <AddGroup onClose={handleGroupClick}/>}
   <div className="edit-container">
       
       <div>
