@@ -27,7 +27,7 @@ import { IsUserContext } from '../lib/IsUserContext';
 import { SelectedGroupContext } from '../ChatRoom/SelectedGroupContext';
 import UserInfo from "../Tab/OtherUser/UserInfor";
 import testAvatar from '../../images/Ảnh đại diện.png'
-
+import ChatWindow from '../ChatRoom/ChatWindow';
 const Chat = () => {
   const {isUser} = useContext(IsUserContext);
   const {selectedGroup} = useContext(SelectedGroupContext);
@@ -557,7 +557,8 @@ const cancelReply = () => {
             </div>
                 </div>
         </div>
-        <div className="body-child-right-2">
+        {isUser && <ChatWindow/>} 
+        <div className={`body-child-right-2 ${isUser ? 'hidden' : ''}`}>
           {/* Display the latest text message */}
           {latestTextMessage && (
             <div className={latestTextMessage.senderId === currentUser.id ? 'Message own' : 'Message'}>
@@ -661,7 +662,7 @@ const cancelReply = () => {
         {isBlocked ? (
   <div className="block-message">Bạn đã chặn người dùng này, không thể nhắn tin!</div>
 ) : (
-  <div className="body-child-right-3">
+  <div className={`body-child-right-3 ${isUser ? 'hidden' : ''}`}>
     <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
     <img src={File} onClick={openFilePicker}/>
     <img src={Voice} onClick={handleVoiceRecord}/>
@@ -672,7 +673,7 @@ const cancelReply = () => {
     <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
   </div>
 )}
-<div className="body-child-right-4">
+<div className={`body-child-right-4 ${isUser ? 'hidden' : ''}`}>
   <div className='input-wrapper'>
     <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
       <input
