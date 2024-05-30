@@ -78,6 +78,9 @@
     display: none;
   }
   .message-text {
+    max-width: 370px;
+    word-wrap: break-word;
+    height: fix-content;
     /* max-width: 60%; */
     min-width: 72%;
     padding: 10px;
