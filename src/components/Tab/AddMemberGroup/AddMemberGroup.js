@@ -65,7 +65,7 @@ export const TabStyled = styled.div`
         background-color: #DBE3E4;
         width: 100%;
         height: 5px;
-        top: 110px;
+        top: 95px;
         left: 0;
         position: absolute;
     }
