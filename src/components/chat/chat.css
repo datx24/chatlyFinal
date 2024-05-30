@@ -134,6 +134,9 @@
     width: 100%;
     border: none;
     outline: none;
+    .disabled{
+        cursor: not-allowed;
+    }
 }
 
 .body-child-right-4 .input-wrapper img {
@@ -401,3 +404,7 @@
     height: 50px;
   }
   
+  &Send{
+    background-color: #ff4d4d;
+    cursor: not-allowed;
+  }

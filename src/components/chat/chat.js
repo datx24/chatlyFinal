@@ -25,6 +25,9 @@ import Send from "../../images/Gửi tin nhắn.png"
 import Share from "../../images/Vector.png"
 import { IsUserContext } from '../lib/IsUserContext';
 import { SelectedGroupContext } from '../ChatRoom/SelectedGroupContext';
+import UserInfo from "../Tab/OtherUser/UserInfor";
+import testAvatar from '../../images/Ảnh đại diện.png'
+
 const Chat = () => {
   const {isUser} = useContext(IsUserContext);
   const {selectedGroup} = useContext(SelectedGroupContext);
@@ -34,7 +37,7 @@ const Chat = () => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
   const [addMode, setAddMode] = useState(false);
-  const { chatId, user } = useChatStore();
+  const { chatId, user,isCurrentBlocked,isReceiverBlocked } = useChatStore();
   const { currentUser } = useUserStore();
   const [showGroupInfo, setShowGroupInfo] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
@@ -48,7 +51,6 @@ const Chat = () => {
   // Thêm state mới để lưu vị trí của tin nhắn được tìm thấy
   const [foundMessageIndex, setFoundMessageIndex] = useState(-1);
   const [foundMessage, setFoundMessage] = useState(null);
-  const [isBlocked, setIsBlocked] = useState(false);
   const [img, setImg] = useState({
     file: null,
     url: "",
@@ -61,10 +63,13 @@ const Chat = () => {
   const mediaRecorder = useRef(null); // Ref để lưu trữ MediaRecorder instance
   const chunks = useRef([]); // Ref để lưu trữ các phần dữ liệu ghi âm
   const [audioUrl, setAudioUrl] = useState(null);
+  const [isUserInfoVisible, setIsUserInfoVisible] = useState(false);
+  // Tạo một context
+  // const { isUserBlocked } = useContext(UserBlockedContext);
+  const isBlocked = isCurrentBlocked || isReceiverBlocked;
 
-
-  const handleBlockClick = () => {
-    toggleChatVisibility();
+  const handleUserInfoToggle = () => {
+    setIsUserInfoVisible(!isUserInfoVisible);
   };
 
   useEffect(() => {
@@ -128,7 +133,9 @@ const Chat = () => {
     try {
       // Tạo một bản sao của mảng tin nhắn hiện tại
       const updatedMessages = [...messages];
-  
+      // if (isUserBlocked) {
+      //   return <div>Bạn đã bị chặn người dùng này, không thể nhắn tin!</div>;
+      // }
       // Kiểm tra và thêm tin nhắn reply nếu có
       if (replyMessageIndex !== -1 && replyContent) {
         updatedMessages.push({
@@ -347,7 +354,7 @@ useEffect(() => {
     
     // If the current user is the sender, do not show the notification
     if (latestMessage.senderId !== currentUser.id) {
-      let senderName = user.displayName; // If the current user received the message, use other user's display name
+      let senderName = user?.displayName; // If the current user received the message, use other user's display name
       const timestamp = moment(latestMessage.createdAt.toDate()).format('HH:mm, DD/MM/YYYY'); // Format the timestamp
 
       // Combine sender's name, message text, and timestamp for notification message
@@ -485,18 +492,16 @@ const cancelReply = () => {
   setReplyText(""); // Đặt giá trị của input về rỗng khi hủy bỏ reply
 };
 
-
-
   return (
     <div className='chat'>
       <div className='body-child-right'>
         <div className="body-child-right-1">
           <div className='body-child-right-1-left'>
-          {isUser ? <img src={selectedGroup.urlImg}/> : <img src={user?.photoURL} />}
+          {isUser ? <img src={selectedGroup?.urlImg}/> : <img src={user?.photoURL} />}
             
           </div>
           <div className='body-child-right-1-nearleft'>
-          {isUser ?  <span>{selectedGroup.nameGroup}</span> :  <span>{user?.displayName}</span>}
+          {isUser ?  <span>{selectedGroup?.nameGroup}</span> :  <span>{user?.displayName}</span>}
            
             {/* <p>4 người</p> */}
           </div>
@@ -526,21 +531,31 @@ const cancelReply = () => {
       </div>
           <div className='body-child-right-1-right'>
           <div className='body-child-right-1-right-1'>
+              <img src={UserPlus} />
+            </div>
+          <div className='body-child-right-1-right-1'>
             {isUser ? 
               <img src={Setting}
                 onClick={handleShowGroupInfo} /> 
               : 
-              <img src={Setting}/>
+              <img src={Setting} onClick={handleUserInfoToggle} />
             }
             {/* ------------------------------------- */}
-
+            {isUserInfoVisible && 
+            <UserInfo gender={user?.gender} 
+                      birthDay={user?.birthDay} 
+                      email={user?.email} 
+                      phoneNumber={user?.phoneNumber} 
+                      photoURL={user?.photoURL}
+                      username={user?.displayName}
+                      onClose={() => setIsUserInfoVisible(false)} 
+                      />}
             {isGroupInfoVisible && <GroupInfo onClose={handleGroupInfoToggle}/>}
             </div>
             <div className='body-child-right-1-right-1'>
               <img src={Phone} />
             </div>
-            
-          </div>
+                </div>
         </div>
         <div className="body-child-right-2">
           {/* Display the latest text message */}
@@ -560,7 +575,7 @@ const cancelReply = () => {
 
 {chat?.messages?.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis()).map((message, index) => (
   <div className={message.senderId === currentUser.id ? 'Message own' : 'Message'} key={index} ref={(el) => (messageRefs.current[index] = el)}>
-    {!message.replyTo && message.senderId !== currentUser.id && <img src={user.photoURL} alt="Avatar" />} {/* Avatar chỉ hiển thị cho tin nhắn gốc và tin nhắn người gửi */}
+    {!message.replyTo && message.senderId !== currentUser.id && <img src={user?.photoURL} alt="Avatar" />} {/* Avatar chỉ hiển thị cho tin nhắn gốc và tin nhắn người gửi */}
     <div className='texts'>
       <div className={message.replyTo ? 'replied-message-wrapper' : ''}>
         {message.replyTo && (
@@ -660,13 +675,14 @@ const cancelReply = () => {
 <div className="body-child-right-4">
   <div className='input-wrapper'>
     <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
-    <input
-            type='text'
-            placeholder='Aa'
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
+      <input
+    type='text'
+    placeholder={(isCurrentBlocked || isReceiverBlocked)? "Bạn không thể gửi tin nhắn" : 'Aa'}
+    value={text}
+    onChange={(e) => setText(e.target.value)}
+    onKeyPress={handleKeyPress}
+    disabled={isCurrentBlocked || isReceiverBlocked}
+  />
     <div className='emoji'>
       <img src={Emoji}
         onClick={() => setOpen((prev) =>!prev)}
@@ -677,8 +693,10 @@ const cancelReply = () => {
     </div>
     <img src={Send}
       onClick={handleSend}
+      disabled={isCurrentBlocked || isReceiverBlocked}
+      className='Send'
     />
-  </div>
+  </div >
 </div>
 {selectedFile && <p className='selected-file-name'>{selectedFile.name}</p>}
       </div>

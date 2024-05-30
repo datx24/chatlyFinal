@@ -3,10 +3,11 @@ import styled from 'styled-components';
 import Header from './Header';
 import ListAdd from '../Tab/AddMemberGroup/ListAdd';
 import createGroup from '../lib/groups';
-import DisplayImage,{imageFile} from './DisplayImage';
+import DisplayImage, { imageFile } from './DisplayImage';
 import InputText, { nameGroup } from './InputText';
 import { useUserStore } from '../lib/userStore';
-import Logo from '../../images/Group 4.png'
+import Logo from '../../images/Group 4.png';
+
 const AddGroupStyled = styled.div`
     width: 471px;
     height: 582px;
@@ -18,7 +19,38 @@ const AddGroupStyled = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    .group-info h3{
+    
+    .header-tab {
+        display: flex;
+        height: 41px;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0px 16px;
+        background-color: #324B50;
+        border-top-left-radius: 18px;
+        border-top-right-radius: 18px;
+        position: relative;
+    }
+    .header-tab .logo {
+        height: 100%;
+    }
+    .header-tab .closeTab {
+        border: none;
+        outline: none;
+        background: none;
+        font-family: "Rubik", sans-serif;
+        font-weight: 900;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+    }
+    .header-tab .closeTab:hover {
+        border: none;
+        background: none;
+        color: white;
+    }
+    
+    .group-info h3 {
         text-align: center;
         font-family: "Roboto", sans-serif;
         font-weight: 700;
@@ -37,7 +69,7 @@ const AddGroupStyled = styled.div`
         margin: 0 16px;
         position: relative;
     }
-    .search_bar i{
+    .search_bar i {
         font-size: 10px;
         margin-right: 5px;
     }
@@ -53,19 +85,19 @@ const AddGroupStyled = styled.div`
         opacity: 0.5;
         position: relative;
     }
-    .group_name img{
+    .group_name img {
         width: 46px;
         height: 46px;
         border-radius: 50%;
         border: 2px solid #238c9f;
     }
-    .group_name{
+    .group_name {
         padding: 0 16px;
         align-items: center;
         display: flex;
         margin-bottom: 20px;
     }
-    .input_group{
+    .input_group {
         outline: none;
         border: none;
         font-family: "Roboto", sans-serif;
@@ -77,7 +109,7 @@ const AddGroupStyled = styled.div`
         width: 87%;
         border-bottom: 1px solid #238C9F;
     }
-    p{
+    p {
         display: flex;
         margin: 0;
         padding: 0 16px;
@@ -86,102 +118,68 @@ const AddGroupStyled = styled.div`
         font-size: 20px;
         font-weight: 600;
     }
-    .create-group{
+    .create-group {
         background-color: #324B50;
         padding: 6px 75px;
         margin: 10px 0;
         border-radius: 10px;
         font-family: "Roboto", sans-serif;
-        font-sỉze: 20px;
+        font-size: 20px;
         font-weight: 700;
         color: white;
         cursor: pointer;
     }
-    .users-list ul{
+    .users-list ul {
         padding: 0px 16px;
         height: 270px;
         overflow-y: auto;
         margin-top: 10px;
     }
-    
-`
-const HeaderTab = styled.div`
-    display: flex;
-    height: 41px;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0px 16px;
-    background-color: #324B50;
-    border-top-left-radius: 18px;
-    border-top-right-radius: 18px;
-    position: relative;
-    .logo{
-        height: 100%;
-    }
-    .closeTab{
-        border: none;
-        outline: none;
-        background: none;
-        font-family: "Rubik", sans-serif;
-        font-weight: 900;
-        color: white;
-        font-size: 20px;
-    }
-    .closeTab:hover{
-        border: none;
-        background: none;
-        color: white;
-        cursor: pointer;
-    }
-`
+`;
 
-export default function AddGroup({ onClose}){
-    const { currentUser} = useUserStore();
+export default function AddGroup({ onClose }) {
+    const { currentUser } = useUserStore();
     const [image, setImage] = useState(null);
     const [selectedUsers, setSelectedUsers] = useState([]);
-
 
     const handleSelectedUsers = (selectedUsers) => {
         setSelectedUsers(selectedUsers);
     };
 
     const handleCreateGroup = () => {
-
-    createGroup(nameGroup, imageFile, selectedUsers, currentUser.id);
+        createGroup(nameGroup, imageFile, selectedUsers, currentUser.id);
     };
 
-    
     return (
         <AddGroupStyled>
-            <Header/>
-            <button 
-                onClick={onClose}
-                className='closeTab'
-            >X</button>
+            <div className="header-tab">
+                <img src={Logo} alt="Logo" className="logo" />
+                <button 
+                    onClick={onClose}
+                    className="closeTab"
+                >X</button>
+            </div>
             <div className='group-info'>
                 <h3>Tạo nhóm</h3>
                 <div className='group_name'>
-                <DisplayImage setImage={setImage} />
-                    <InputText/>
+                    <DisplayImage setImage={setImage} />
+                    <InputText />
                 </div>
                 <div className='search_bar'>
-                    <i className='bx bx-search-alt' style = {{fontSize: '18px', color: "#324B50"}}></i>
-                    <input type='text' className='in-search' placeholder='Tên người dùng...'/>
+                    <i className='bx bx-search-alt' style={{ fontSize: '18px', color: "#324B50" }}></i>
+                    <input type='text' className='in-search' placeholder='Tên người dùng...' />
                 </div>
             </div>
-            <div style={{width: '100%', height: '5px', backgroundColor: '#DBE3E4', margin: '25px 0 0 0'}}></div>
+            <div style={{ width: '100%', height: '5px', backgroundColor: '#DBE3E4', margin: '25px 0 0 0' }}></div>
             <div className='users-list'>
                 {/* <p>Gợi ý</p> */}
-                <ListAdd onSelectUsers={handleSelectedUsers}/>
+                <ListAdd onSelectUsers={handleSelectedUsers} />
             </div>
-        
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                
                 <button onClick={handleCreateGroup} className="create-group">
-                Tạo nhóm
+                    Tạo nhóm
                 </button>
             </div>
-            
         </AddGroupStyled>
-    )
+    );
 }

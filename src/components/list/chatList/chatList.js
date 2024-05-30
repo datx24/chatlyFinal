@@ -10,18 +10,7 @@ import { useSearch } from '../../lib/searchContext'; // Import SearchContext
 import Chat from '../../chat/chat';
 import RoomList from '../../ChatRoom/RoomList'
 import { IsUserContext } from '../../lib/IsUserContext';
-export const isChatVisible = true; 
-export const toggleChatVisibility = () => {};
-// Export hàm unblockUser để sử dụng bên ngoài
-export const unblockUser = async (userId) => {
-  try {
-    // Thực hiện các thao tác cần thiết để gỡ chặn người dùng
-    console.log(`User ${userId} has been unblocked.`);
-  } catch (error) {
-    console.error('Error unblocking user:', error);
-    throw error; // Ném ra lỗi nếu có lỗi xảy ra trong quá trình gỡ chặn người dùng
-  }
-};
+
 const ChatList = () => {
   const {  setIsUser} = useContext(IsUserContext);
   const { filteredUsers } = useSearch(); // Use SearchContext
@@ -33,14 +22,6 @@ const ChatList = () => {
   const [isPageVisible, setIsPageVisible] = useState(true);
   const [chats, setChats] = useState([]);
   const [isChatVisible, setIsChatVisible] = useState(true);
-  // Define isUserBlocked state and handleUnblockUser function
-  const [isUserBlocked, setIsUserBlocked] = useState(false);
-  const [showBlockMessage, setShowBlockMessage] = useState(false);
-  const {blockUser, unblockUser, listenBlockedUsers } = useChatStore(); // Destructure the required functions from useChatStore
-  const [selectedUserInfo, setSelectedUserInfo] = useState({});
-  const toggleChatVisibility = () => {
-    setIsChatVisible((prev) => !prev);
-  };
 
   useEffect(() => {
     if (isLoading || !currentUser?.id) return;
@@ -113,19 +94,15 @@ const ChatList = () => {
   };
 
   const handleAvatarClick = async (chat) => {
-  setIsUser(false);
-  if (chat && chat.user) {
-    setSelectedUser(chat.user);
-    changeChat(chat.chatId, chat.user);
-    setIsBackdropVisible(true);
-    await updateLastActive(chat.user.id);
-    setSelectedUserInfo(chat.user); // Set selected user info here
-  } else {
-    console.error('User data is not available for chat', chat);
-  }
-};
-
-  
+    setIsUser(false);
+    if (chat && chat.user) {
+      setSelectedUser(chat.user);
+      changeChat(chat.chatId, chat.user);
+      await updateLastActive(chat.user.id);
+    } else {
+      console.error('User data is not available for chat', chat);
+    }
+  };
 
   const updateLastActive = async (userId, isActive = true) => {
     const userDocRef = doc(db, 'users', userId);
@@ -158,116 +135,27 @@ const ChatList = () => {
     };
   }, [isBackdropVisible]);
 
-  const handleBlockUser = async (userId) => {
-    try {
-      // Cập nhật trạng thái chặn trong cơ sở dữ liệu
-      await blockUser(userId);
-      // Cập nhật trạng thái chặn ngay lập tức trên giao diện người dùng
-      setIsUserBlocked(true);
-      setShowBlockMessage(true);
-      setIsBackdropVisible(false);
-    } catch (error) {
-      console.error('Error blocking user:', error);
-    }
-  };
-  
-  const handleUnblockUser = async (userId) => {
-    try {
-      // Gỡ chặn người dùng trong cơ sở dữ liệu
-      await unblockUser(userId);
-      // Cập nhật trạng thái gỡ chặn ngay lập tức trên giao diện người dùng
-      setIsUserBlocked(false);
-      setIsBackdropVisible(false);
-    } catch (error) {
-      console.error('Error unblocking user:', error);
-    }
-  };
-  
-
-  const checkIfUserBlocked = (userId) => {
-    try {
-      const chatStoreState = useChatStore.getState();
-      if (chatStoreState && chatStoreState.blockedUsers && Array.isArray(chatStoreState.blockedUsers)) {
-        const userIsBlocked = chatStoreState.blockedUsers.includes(userId);
-        setIsUserBlocked(userIsBlocked);
-      } else {
-        setIsUserBlocked(false);
-      }
-    } catch (error) {
-      console.error('Error checking if user is blocked:', error);
-    }
-  };
-  
-  
-  
-
-  // Gọi hàm kiểm tra khi component được tải lên
-  useEffect(() => {
-    checkIfUserBlocked(selectedUser?.id);
-  }, [selectedUser]);
-
-
-  useEffect(() => {
-    if (selectedUser && selectedUser.id) {
-      checkIfUserBlocked(selectedUser.id);
-    }
-  }, [selectedUser]);
-  
-  useEffect(() => {
-    const unSubBlockedUsers = useChatStore.getState().listenBlockedUsers();
-  
-    return () => unSubBlockedUsers();
-  }, []);
-  
-  useEffect(() => {
-    if (!currentUser?.id) return;
-  
-    const unSubBlockedUser = onSnapshot(doc(db, 'users', currentUser.id), (doc) => {
-      const userData = doc.data();
-      if (userData && userData.blocked) {
-        setIsUserBlocked(userData.blocked.includes(selectedUser?.id));
-      }
-    });
-  
-    return unSubBlockedUser;
-  }, [currentUser, selectedUser]);
-  
-
   return (
     <div className='chatList'>
       <RoomList/>
       {filteredUsers.map((chat) => (
-  <div key={chat?.chatId}>
-    {chat?.user ? (
-      <div className='body2-child-1' onClick={() => handleAvatarClick(chat)}>
-        <div className='body2-child-1-left1'>
-          <div className='logo-body2'>
-            <img src={chat.user.photoURL} alt="User Avatar" />
-            <div className={`dot ${chat.user.isActive && isPageVisible ? 'red' : 'green'}`}></div>
-          </div>
+        <div key={chat?.chatId}>
+          {chat?.user ? (
+            <div className='body2-child-1' onClick={() => handleAvatarClick(chat)}>
+              <div className='body2-child-1-left1'>
+                <div className='logo-body2'>
+                  <img src={chat.user.photoURL} alt="User Avatar" />
+                  <div className={`dot ${chat.user.isActive && isPageVisible ? 'red' : 'green'}`}></div>
+                </div>
+              </div>
+              <div className='body2-child-1-left2'>
+                <span>{chat.user.displayName}</span><br />
+                <p>{chat.lastMessage} - {calculateTimeAgo(chat.createdAt)}</p>
+              </div>
+            </div>
+          ) : null}
         </div>
-        <div className='body2-child-1-left2'>
-          <span>{chat.user.displayName}</span><br />
-          <p>{chat.lastMessage} - {calculateTimeAgo(chat.createdAt)}</p>
-        </div>
-      </div>
-    ) : null}
-  </div>
-))}
-
-      {isBackdropVisible && selectedUser && (
-  <div className="moon-backdrop" ref={backdropRef}>
-    <div className="moon-content">
-    {!isUserBlocked && (
-  <button onClick={() => handleBlockUser(selectedUser.id)}>Chặn</button>
-)}
-{isUserBlocked && (
-  <button onClick={() => handleUnblockUser(selectedUser.id)}>Gỡ chặn</button>
-)}
-    </div>
-  </div>
-)}
-
+      ))}
     </div>
   );
 };

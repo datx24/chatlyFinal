@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 var imageFile;
 const DisplayImage = () => {
 
@@ -25,7 +26,7 @@ const [image, setImage] = useState(null);
             height: "50px",
             width: "82px",
             position: "absolute",
-            left: "19%",
+            left: "59%",
             top: "89px",
            }}
            />

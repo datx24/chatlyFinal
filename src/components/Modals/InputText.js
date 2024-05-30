@@ -7,7 +7,7 @@ export default function InputText() {
     return (
       <form>
        <input 
-            style={{position:'relative',left:'0%'}}
+            style={{position:'relative',left:'8%'}}
             type="text" 
             placeholder='Nhập tên nhóm'
             value={name}

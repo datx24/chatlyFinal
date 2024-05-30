@@ -3,6 +3,7 @@ import React,{useState, useEffect} from 'react';
 import styled from 'styled-components';
 import { signOut,onAuthStateChanged,getAuth } from 'firebase/auth';
 import { auth } from '../lib/firebaseConfig';
+import UserBlockedContext from '../lib/UserBlockedProvider'
 const WrapperStyled = styled.div`
     display:flex;
     justify-content: space-between;
@@ -18,6 +19,7 @@ const WrapperStyled = styled.div`
 export default function UserInfor(){
     const [userDisplayName, setUserDisplayName] = useState('')
     const [userImgUrl, setUserImgUrl] = useState('')
+    const { isUserBlocked } = useContext(UserBlockedContext);
 
     const handleLogout = async () => {
       try {
