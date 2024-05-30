@@ -310,7 +310,7 @@
 }
 
 .texts p {
-    max-width: 400px;
+    max-width: 370px;
     width: max-content;
     font-family: 'Roboto', sans-serif;
     padding: 10px 15px;
@@ -321,6 +321,7 @@
     color: black;
     position: relative;
     word-wrap: break-word;
+    height: fit-content;
 }
 
 .texts span {
