@@ -150,7 +150,7 @@ const ChatList = () => {
               </div>
               <div className='body2-child-1-left2'>
                 <span>{chat.user.displayName}</span><br />
-                <p>{chat.lastMessage} - {calculateTimeAgo(chat.createdAt)}</p>
+                <p>{chat.lastMessage} - {calculateTimeAgo(chat.updatedAt)}</p>
               </div>
             </div>
           ) : null}
