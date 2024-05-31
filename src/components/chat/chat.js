@@ -659,9 +659,6 @@ const cancelReply = () => {
   </div>
 )}
 
-        {isBlocked ? (
-  <div className="block-message">Bạn đã chặn người dùng này, không thể nhắn tin!</div>
-) : (
   <div className={`body-child-right-3 ${isUser ? 'hidden' : ''}`}>
     <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
     <img src={File} onClick={openFilePicker}/>
@@ -672,7 +669,7 @@ const cancelReply = () => {
     </label>
     <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
   </div>
-)}
+
 <div className={`body-child-right-4 ${isUser ? 'hidden' : ''}`}>
   <div className='input-wrapper'>
     <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
